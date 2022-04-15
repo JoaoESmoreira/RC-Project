@@ -6,4 +6,4 @@ Project for the Networking and Communication subject
 
 João - joaomoreira@student.dei.uc.pt https://github.com/JoaoESmoreira
 
-Rafael - email  https://github.com/rafag00
+Rafael - rafaelg@student.dei.uc.pt  https://github.com/rafag00
