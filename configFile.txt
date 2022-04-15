@@ -1,0 +1,10 @@
+admin/admin_password
+2
+User1;pass1;1000
+User2;pass2;1500
+bv1;stock_bv1;10
+bv1;stock_bv2;20
+bv1;stock_bv3;30
+nyse;stock_nyse_1;40
+nyse;stock_nyse_2;50
+nyse;stock_nyse_3;60
