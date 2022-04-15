@@ -43,6 +43,8 @@ nc -u localhost 9876
 
 ## Runing server
 
+First of all, the admin must login with their credentials. To do this, just press enter and the server will send you some mesages with the respective instructoins.
+
 After you run the server and netcat, it is time for the admin to send some instructions to the server.
 
 ### Options
@@ -56,7 +58,7 @@ ADD_USER {username} {password} {the sockets we have access} {budget}
 LIST
 ```
 
-#### Delete a user
+##### Delete a user
 ```bash
 DEL {username}
 ```
@@ -85,5 +87,6 @@ QUIT SERVER
 ## Collaborators
 
 João - joaomoreira@student.dei.uc.pt https://github.com/JoaoESmoreira
+
 
 Rafael - rafaelg@student.dei.uc.pt  https://github.com/rafag00
