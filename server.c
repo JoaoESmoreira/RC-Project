@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 
 
-#define DEBUG
+#define DEBUG2
 #define READING(X,Y,Z, ...) if (X != 2 && Y != Z)  { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 #define CHECK(X, ...)       if (X == -1)           { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 
@@ -110,6 +110,7 @@ int main() {
     admin_usage (terminal_fd, admin, admin_addr, t_len);
 
     close(terminal_fd);
+    close(file);
     return 0;
 }
 
@@ -208,10 +209,10 @@ void init(STOCK_LIST *stock) {
 void admin_usage (int terminal_fd, ADMIN admin, SOCKADDRIN admin_addr, socklen_t t_len) {
     char buf[BUFLEN], username[BUFLEN], password[BUFLEN];
     char log_men[] = "Introduza o seu nick: \n";
-    char pas_men[] = "Introduza a sua password\n";
+    char pas_men[] = "Introduza a sua password: \n";
 
-        CHECK(recvfrom(terminal_fd, buf, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
-        printf("Admin said: %s\n", buf);
+    CHECK(recvfrom(terminal_fd, buf, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
+    printf("Admin said: %s\n", buf);
     while (true) {
 
 	    CHECK(sendto(terminal_fd, (void *) log_men, strlen(log_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
@@ -222,7 +223,6 @@ void admin_usage (int terminal_fd, ADMIN admin, SOCKADDRIN admin_addr, socklen_t
 
 	    CHECK(sendto(terminal_fd, (void *) pas_men, strlen(pas_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
         CHECK(recvfrom(terminal_fd, password, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
-
         #ifdef DEBUG
         printf("Admin said: %s\n", password);
         #endif
@@ -232,6 +232,27 @@ void admin_usage (int terminal_fd, ADMIN admin, SOCKADDRIN admin_addr, socklen_t
         
         printf("Credencias erradas\n");
     }
-    printf("Loged in\n");
-    // continuar o trabalho ou retornar true
+	CHECK(sendto(terminal_fd, (void *) "Logged in.\n\n", strlen("Logged in.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+
+
+    char command_line[BUFLEN * 5];
+    char command[BUFLEN];
+    while (true) {
+        CHECK(recvfrom(terminal_fd, command_line, BUFLEN * 5, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
+        #ifdef DEBUG2
+        printf("Admin said: %s\n", command_line);
+        #endif
+
+        sscanf(command_line, "%s", command);
+        #ifdef DEBUG2
+        printf("Admin said: '%s' %d\n", command, strcmp(command, "QUIT"));
+        #endif
+
+        if (strcmp(command, "QUIT") == 0) {
+	        CHECK(sendto(terminal_fd, (void *) "Logged out.\n\n", strlen("Logged out.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+            break;
+        }
+
+
+    }
 }
