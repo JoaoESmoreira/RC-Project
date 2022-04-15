@@ -17,6 +17,7 @@
 #define SOCKADDRIN struct sockaddr_in
 
 #define MAXLEN   50
+#define MAXUSERS 10
 #define MAXSTOCK 6 
 
 
@@ -28,7 +29,9 @@ typedef struct _ADMIN {
 typedef struct _USER {
     char name[MAXLEN];
     char password[MAXLEN];
+    char markets[MAXLEN][2];
     int  budget;
+    int pos;
 } USER;
 
 typedef struct _STOCK_LIST {
@@ -44,7 +47,7 @@ int   read_number_users (FILE *);
 void  read_user_file (FILE *, USER *, int);
 void  init(STOCK_LIST *);
 void  read_stock_file (FILE *, STOCK_LIST *);
-void  admin_usage (ADMIN);
+void  admin_usage (ADMIN, USER *);
 
 
 int main() {
@@ -62,7 +65,7 @@ int main() {
     printf("Number of users: %d\n", number_user);
     #endif
 
-    USER users[number_user];
+    USER users[MAXUSERS]; users->pos = 0;
     read_user_file(file, users, number_user);
 
     #ifdef DEBUG
@@ -95,9 +98,8 @@ int main() {
         }
     #endif
 
-
     // server
-    admin_usage(admin);
+    admin_usage(admin, users);
 
     fclose(file);
     return 0;
@@ -137,6 +139,11 @@ int read_number_users (FILE *file) {
     num_events = fscanf(file, "%d%c", &total, &end_char);
     READING(num_events, end_char, end_line, "ERRO NA LINHA 2\n");
 
+    if (total > MAXUSERS || total < 2) {
+        printf("Numero de usuarios invalidos\n");
+        exit(EXIT_FAILURE);
+    }
+
     return total;
 }
 
@@ -156,6 +163,8 @@ void read_user_file (FILE *file, USER *users, int max_users) {
 
         num_events = fscanf(file, "%d%c", &users[i].budget, &end_char);
         READING(num_events, end_line, sparator, "ERRO NO %dº USUARIO\n", i + 1);
+
+        users->pos++;
     }
 }
 
@@ -195,7 +204,17 @@ void init(STOCK_LIST *stock) {
 }
 
 
-void admin_usage (ADMIN admin) {
+int number_spaces(const char *string) {
+    int count = 0;
+
+    for (int i = 0; string[i] != '\0'; ++i) {
+        if (string[i] == ' ')
+            count++;
+    }
+    return count;
+}
+
+void admin_usage (ADMIN admin, USER *users) {
     int terminal_fd;
     SOCKADDRIN terminal_addr, admin_addr;
     socklen_t t_len = sizeof(admin_addr);
@@ -207,7 +226,7 @@ void admin_usage (ADMIN admin) {
 
 	CHECK(bind(terminal_fd, (struct sockaddr*) &terminal_addr, sizeof(terminal_addr)), "Erro no bind");
 
-    char buf[BUFLEN], username[BUFLEN], password[BUFLEN];
+    char buf[BUFLEN], username[MAXLEN], password[MAXLEN];
     char log_men[] = "Introduza o seu nick: \n";
     char pas_men[] = "Introduza a sua password: \n";
 
@@ -216,13 +235,13 @@ void admin_usage (ADMIN admin) {
     while (true) {
 
 	    CHECK(sendto(terminal_fd, (void *) log_men, strlen(log_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
-        CHECK(recvfrom(terminal_fd, username, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
+        CHECK(recvfrom(terminal_fd, username, MAXLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
         #ifdef DEBUG
         printf("Admin said: %s\n", username);
         #endif
 
 	    CHECK(sendto(terminal_fd, (void *) pas_men, strlen(pas_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
-        CHECK(recvfrom(terminal_fd, password, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
+        CHECK(recvfrom(terminal_fd, password, MAXLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
         #ifdef DEBUG
         printf("Admin said: %s\n", password);
         #endif
@@ -239,21 +258,60 @@ void admin_usage (ADMIN admin) {
     char command[BUFLEN];
     while (true) {
         CHECK(recvfrom(terminal_fd, command_line, BUFLEN * 5, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
-        #ifdef DEBUG2
-        printf("Admin said: %s\n", command_line);
-        #endif
 
         sscanf(command_line, "%s", command);
-        #ifdef DEBUG2
-        printf("Admin said: '%s' %d\n", command, strcmp(command, "QUIT"));
-        #endif
 
         if (strcmp(command, "QUIT") == 0) {
 	        CHECK(sendto(terminal_fd, (void *) "Logged out.\n\n", strlen("Logged out.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             break;
+        } else if (strcmp(command, "ADD_USER") == 0) {
+            if (users->pos < MAXUSERS) {
+                char stock1[MAXLEN], stock2[MAXLEN];
+                int  spaces = number_spaces(command_line);
+                int  number_events, budget;
+
+                if (spaces == 5) {
+                    number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, stock1, stock2, &budget);
+
+                    if (number_events  == 6) {
+                        strcpy(users[users->pos].name, username);
+                        strcpy(users[users->pos].password, password);
+                        strcpy(users[users->pos].markets[0], stock1);
+                        strcpy(users[users->pos].markets[1], stock2);
+                        users[users->pos].budget = budget;
+                        users->pos++;
+                    } else {
+	                    CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    }
+                } else if (spaces == 4) {
+                    number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
+
+                    if (number_events  == 5) {
+                        strcpy(users[users->pos].name, username);
+                        strcpy(users[users->pos].password, password);
+                        strcpy(users[users->pos].markets[0], stock1);
+                        strcpy(users[users->pos].markets[1], "-");
+                        users[users->pos].budget = budget;
+                        users->pos++;
+                    } else {
+	                    CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    }
+                } else {
+	                CHECK(sendto(terminal_fd, (void *) "Numero de parametros errado\n", strlen("Numero de parametros errado\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                }
+            } else {
+	            CHECK(sendto(terminal_fd, (void *) "Maximo de users atingido\n", strlen("Maximo de users atingido\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+            }
+        } else if (strcmp(command, "LIST") == 0) {
+            char string[BUFLEN] = "";
+
+            for(int i = 0; i < users->pos; ++i) {
+                strcat(string, users[i].name);
+                strcat(string, "\n");
+            }
+	        
+            CHECK(sendto(terminal_fd, (void *) string, strlen(string), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
         }
-
-
     }
     close(terminal_fd);
 }
