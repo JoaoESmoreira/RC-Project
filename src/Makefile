@@ -1,6 +1,7 @@
 CC = gcc
 FLAGS = -g -Wall -Wextra
-OBJS = server.o
+OBJS = server.o biblio.o
+.PHONY: all clean
 
 
 ########## GENERICO ###################
@@ -16,4 +17,5 @@ clean:
 		$(CC) $(FLAGS) -c $^
 
 ######### DEPENDENCIAS ##################
-server.o:	server.c
+server.o:	server.c biblio.c
+biblio.o:	biblio.c biblio.h

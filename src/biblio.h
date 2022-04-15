@@ -1,0 +1,59 @@
+#ifndef server_H_
+#define server_H_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+//#define DEGUG
+//#define DEBUG2
+#define READING(X,Y,Z, ...) if (X != 2 && Y != Z)  { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
+#define CHECK(X, ...)       if (X == -1)           { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
+
+#define BUFLEN     1024
+#define PORT       9876
+#define SOCKADDRIN struct sockaddr_in
+
+#define MAXLEN   50
+#define MAXUSERS 10
+#define MAXSTOCK 6 
+
+
+typedef struct _ADMIN {
+    char name[MAXLEN];
+    char password[MAXLEN];
+} ADMIN;
+
+typedef struct _USER {
+    char name[MAXLEN];
+    char password[MAXLEN];
+    char markets[MAXLEN][2];
+    int  budget;
+    int  pos;
+} USER;
+
+typedef struct _STOCK_LIST {
+    char market[MAXLEN];
+    char name[MAXLEN];
+    int  price;
+} STOCK_LIST;
+
+
+FILE* check_file (const char *);
+ADMIN read_admin_file (FILE *);
+int   read_number_users (FILE *);
+void  read_user_file (FILE *, USER *, int);
+void  init(STOCK_LIST *);
+void  read_stock_file (FILE *, STOCK_LIST *);
+void  admin_usage (ADMIN, USER *);
+
+
+int REFRESH_TIME;
+
+
+#endif 
