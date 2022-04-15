@@ -1,4 +1,4 @@
-#include "biblio.h"
+#include "server_header.h"
 
 int main() {
     REFRESH_TIME = 10;

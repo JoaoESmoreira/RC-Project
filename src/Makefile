@@ -1,6 +1,6 @@
 CC = gcc
 FLAGS = -g -Wall -Wextra
-OBJS = server.o biblio.o
+OBJS = server.o read_file.o terminalAdmin.o
 .PHONY: all clean
 
 
@@ -10,12 +10,19 @@ all:	prog
 prog:	$(OBJS)
 		$(CC) $(FLAGS) $(OBJS) -o prog
 
+debug:	$(OBJS)
+		$(CC) $(CFLAGS) $(OBJS) -DDEBUG -o prog
+
 clean:	
 		rm $(OBJS) prog
+
+zip:
+		zip Projeto.zip -r *.c *.h Makefile configFile.txt
 
 %.o:	%.c
 		$(CC) $(FLAGS) -c $^
 
 ######### DEPENDENCIAS ##################
-server.o:	server.c biblio.c
-biblio.o:	biblio.c biblio.h
+server.o:			server.c terminalAdmin.c read_file.c
+read_file.o:		read_file.c server_header.h
+terminalAdmin.o:	terminalAdmin.c server_header.h
