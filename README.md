@@ -4,5 +4,6 @@ Project for the Networking and Communication subject
 
 ## Collaborators
 
-João - joaomoreira@student.dei.uc.pt https://github.com/JoaoESmoreira //
-Rafael - email e github
+João - joaomoreira@student.dei.uc.pt https://github.com/JoaoESmoreira
+
+Rafael - email  https://github.com/rafag00
