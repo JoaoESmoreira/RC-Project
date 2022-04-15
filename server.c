@@ -44,7 +44,7 @@ int   read_number_users (FILE *);
 void  read_user_file (FILE *, USER *, int);
 void  init(STOCK_LIST *);
 void  read_stock_file (FILE *, STOCK_LIST *);
-void  admin_usage (int, ADMIN, SOCKADDRIN, socklen_t);
+void  admin_usage (ADMIN);
 
 
 int main() {
@@ -97,20 +97,9 @@ int main() {
 
 
     // server
-    int terminal_fd;
-    SOCKADDRIN terminal_addr, admin_addr;
-    socklen_t t_len = sizeof(admin_addr);
+    admin_usage(admin);
 
-    CHECK((terminal_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)), "Erro no socket\n");
-	terminal_addr.sin_family 	  = AF_INET;
-	terminal_addr.sin_port   	  = htons(PORT);
-	terminal_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	CHECK(bind(terminal_fd, (struct sockaddr*) &terminal_addr, sizeof(terminal_addr)), "Erro no bind");
-    admin_usage (terminal_fd, admin, admin_addr, t_len);
-
-    close(terminal_fd);
-    close(file);
+    fclose(file);
     return 0;
 }
 
@@ -206,7 +195,18 @@ void init(STOCK_LIST *stock) {
 }
 
 
-void admin_usage (int terminal_fd, ADMIN admin, SOCKADDRIN admin_addr, socklen_t t_len) {
+void admin_usage (ADMIN admin) {
+    int terminal_fd;
+    SOCKADDRIN terminal_addr, admin_addr;
+    socklen_t t_len = sizeof(admin_addr);
+
+    CHECK((terminal_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)), "Erro no socket\n");
+	terminal_addr.sin_family 	  = AF_INET;
+	terminal_addr.sin_port   	  = htons(PORT);
+	terminal_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	CHECK(bind(terminal_fd, (struct sockaddr*) &terminal_addr, sizeof(terminal_addr)), "Erro no bind");
+
     char buf[BUFLEN], username[BUFLEN], password[BUFLEN];
     char log_men[] = "Introduza o seu nick: \n";
     char pas_men[] = "Introduza a sua password: \n";
@@ -255,4 +255,5 @@ void admin_usage (int terminal_fd, ADMIN admin, SOCKADDRIN admin_addr, socklen_t
 
 
     }
+    close(terminal_fd);
 }
