@@ -36,18 +36,20 @@ typedef struct _USER {
     char password[MAXLEN];
     char markets[2][MAXLEN];
     int  budget;
-    int  pos;
+    int  size;
 } USER;
 
 typedef struct _STOCK_LIST {
     char market[MAXLEN];
     char name[MAXLEN];
     int  price;
+    int  size;
 } STOCK_LIST;
 
 typedef struct _ADMIN_SERVER_ARGS {
     ADMIN admin;
     USER *users;
+    STOCK_LIST *stock;
 } ADMIN_SERVER_ARGS;
 
 

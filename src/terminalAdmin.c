@@ -11,7 +11,7 @@ static int number_spaces(const char *string) {
 }
 
 static bool user_in_list (const USER *users, const char *username) {
-    for (int i = 0; i < users->pos; ++i) {
+    for (int i = 0; i < users->size; ++i) {
         if (strcmp(users[i].name, username) == 0)
             return true;
     }
@@ -19,17 +19,34 @@ static bool user_in_list (const USER *users, const char *username) {
 }
 
 static void add_user_atributs(USER *users, const char *name, const char *password, const char * stock1, const char * stock2, const int budget) {
-    strcpy(users[users->pos].name, name);
-    strcpy(users[users->pos].password, password);
-    strcpy(users[users->pos].markets[0], stock1);
-    strcpy(users[users->pos].markets[1], stock2);
-    users[users->pos].budget = budget;
+    strcpy(users[users->size].name, name);
+    strcpy(users[users->size].password, password);
+    strcpy(users[users->size].markets[0], stock1);
+    strcpy(users[users->size].markets[1], stock2);
+    users[users->size].budget = budget;
 }
 
-static void add_user (USER *users, const char * command_line, int terminal_fd, SOCKADDRIN admin_addr) {
+static bool in_stock (const STOCK_LIST *stock, const char *stock1, const char *stock2) {
+    bool flag1 = false, flag2 = false;
+
+    if (strcmp(stock2, "-") == 0)
+        flag2 = true;
+
+    for (int i = 0; i < stock->size; ++i) {
+        if (strcmp(stock1, stock[i].name) == 0) {
+            flag1 = true;
+        }
+        if (strcmp(stock2, stock[i].name) == 0) {
+            flag1 = true;
+        }
+    }
+    return flag1 && flag2;
+}
+
+static void add_user (USER *users, const char * command_line, const STOCK_LIST *stock, int terminal_fd, SOCKADDRIN admin_addr) {
     char command[MAXLEN], username[MAXLEN], password[MAXLEN];
 
-    if (users->pos < MAXUSERS) {
+    if (users->size < MAXUSERS) {
         char stock1[MAXLEN], stock2[MAXLEN];
         int  spaces = number_spaces(command_line);
         int  number_events, budget;
@@ -37,12 +54,17 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
         if (spaces == 5) {
             number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, stock1, stock2, &budget);
 
+            if (!in_stock(stock, stock1, stock2)) {
+                printf("Nome de bolsas enesistentes\n");
+                return;
+            }
+
             if (number_events  == 6) {
                 if (!user_in_list(users, username)) {
                     add_user_atributs(users, username, password, stock1, stock2, budget);
-                    users->pos++;
+                    users->size++;
                 } else {
-                    for (int i = 0; i < users->pos; ++i) {
+                    for (int i = 0; i < users->size; ++i) {
                         if (strcmp(users[i].name, username) == 0) {
                             add_user_atributs(users, username, password, stock1, stock2, budget);
                             break;
@@ -55,12 +77,17 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
         } else if (spaces == 4) {
             number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
 
+            if (!in_stock(stock, stock1, "-")) {
+                printf("Nome de bolsas enesistentes\n");
+                return;
+            }
+
             if (number_events  == 5) {
                 if (!user_in_list(users, username)) {
                     add_user_atributs(users, username, password, stock1, "-", budget);
-                    users->pos++;
+                    users->size++;
                 } else {
-                    for (int i = 0; i < users->pos; ++i) {
+                    for (int i = 0; i < users->size; ++i) {
                         if (strcmp(users[i].name, username) == 0) {
                             add_user_atributs(users, username, password, stock1, "-", budget);
                             break;
@@ -81,10 +108,10 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
 static void list (USER *users, char *string) {
     char aux[MAXLEN];
 
-    if (users->pos == 0)
-        strcat(string, "Lista vazia");
+    if (users->size == 0)
+        strcat(string, "Lista vazia\n");
 
-    for (int i = 0; i < users->pos; ++i) {
+    for (int i = 0; i < users->size; ++i) {
         strcat(string, users[i].name); strcat(string, " ");
         strcat(string, users[i].password); strcat(string, " ");
         strcat(string, users[i].markets[0]); strcat(string, " ");
@@ -92,13 +119,13 @@ static void list (USER *users, char *string) {
         sprintf(aux, "%d\n", users[i].budget);
         strcat(string, aux);
     }
+    strcat(string, "\n");
 }
 
 static void delete (USER *users, const char *name) {
+    if (users->size > 0) {
 
-    if (users->pos > 0) {
-
-        for (int i = 0; i < users->pos; ++i) {
+        for (int i = 0; i < users->size; ++i) {
             if (strcmp(name, users[i].name) == 0) {
                 #ifdef DEBUG
                 printf("%s - %s\n", users[i].name, name);
@@ -106,16 +133,16 @@ static void delete (USER *users, const char *name) {
                 #endif
 
                 // eliminar o ultimo
-                if (i == users->pos - 1) {
-                    users->pos--;
+                if (i == users->size - 1) {
+                    users->size--;
                     break;
                 } 
 
                 // trocar o ultimo com o user a eliminar
-                int pos    = users->pos;
-                users->pos = i;
+                int pos     = users->size;
+                users->size = i;
                 add_user_atributs(users, users[pos - 1].name, users[pos - 1].password, users[pos - 1].markets[0], users[pos - 1].markets[1], users[pos - 1].budget);
-                users->pos = pos - 1;
+                users->size = pos - 1;
                 break;
             }
         }
@@ -127,6 +154,7 @@ void* admin_usage (void *args) {
     ADMIN_SERVER_ARGS argumento = *((ADMIN_SERVER_ARGS *) args);
     ADMIN admin  = argumento.admin;
     USER  *users = argumento.users;
+    STOCK_LIST *stock = argumento.stock;
 
     SOCKADDRIN terminal_addr, admin_addr;
     socklen_t  t_len = sizeof(admin_addr);
@@ -186,7 +214,7 @@ void* admin_usage (void *args) {
                 break;
             } else if (strcmp(command, "ADD_USER") == 0) {
 
-                add_user(users, command_line, terminal_fd, admin_addr);
+                add_user(users, command_line, stock, terminal_fd, admin_addr);
 
             } else if (strcmp(command, "LIST") == 0) {
                 char string[BUFLEN] = "";

@@ -61,7 +61,7 @@ void read_user_file (FILE *file, USER *users, int max_users) {
 
         strcpy(users[i].markets[0], "-");
         strcpy(users[i].markets[1], "-");
-        users->pos++;
+        users->size++;
     }
 }
 
@@ -89,6 +89,7 @@ void read_stock_file (FILE *file, STOCK_LIST *stock) {
 
         num_events = fscanf(file, "%d%c", &stock[i].price, &end_char);
         READING(num_events, end_line, sparator, "ERRO NA %dº ACAO\n", i + 1);
+        stock->size++;
     }
 }
 
@@ -98,4 +99,5 @@ void init_stock(STOCK_LIST *stock) {
         *stock[i].name   = '\0';
         stock[i].price   = 0;
     }
+    stock->size = 0;
 }

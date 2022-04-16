@@ -15,7 +15,7 @@ int main() {
     printf("Number of users: %d\n", number_user);
     #endif
 
-    USER users[MAXUSERS]; users->pos = 0;
+    USER users[MAXUSERS]; users->size = 0;
     read_user_file(file, users, number_user);
 
     #ifdef DEBUG
@@ -52,6 +52,7 @@ int main() {
     ADMIN_SERVER_ARGS argumento;
     argumento.admin = admin;
     argumento.users = users;
+    argumento.stock = stock;
 
     pthread_t admin_server;
 
