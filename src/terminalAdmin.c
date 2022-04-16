@@ -78,7 +78,7 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
             number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
 
             if (!in_stock(stock, stock1, "-")) {
-                printf("Nome de bolsas enesistentes\n");
+	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas enesistentes\n", strlen("Nome de bolsas enesistentes\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 return;
             }
 

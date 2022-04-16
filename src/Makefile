@@ -17,7 +17,7 @@ clean:
 		rm $(OBJS) prog
 
 zip:
-		zip Projeto.zip -r *.c *.h Makefile configFile.txt
+		zip Projeto.zip -r *.c *.h *.pdf Makefile configFile.txt
 
 %.o:	%.c
 		$(CC) $(FLAGS) -c $^

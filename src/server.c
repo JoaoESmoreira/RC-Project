@@ -49,7 +49,7 @@ int main() {
     #endif
 
     // server
-    ADMIN_SERVER_ARGS argumento;
+    /*ADMIN_SERVER_ARGS argumento;
     argumento.admin = admin;
     argumento.users = users;
     argumento.stock = stock;
@@ -60,6 +60,6 @@ int main() {
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
     //admin_usage(admin, users);
 
-    fclose(file);
+    fclose(file);*/
     return 0;
 }

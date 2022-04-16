@@ -65,6 +65,35 @@ void read_user_file (FILE *file, USER *users, int max_users) {
     }
 }
 
+static bool in_array(const char *string, int count, char str[6][MAXLEN]) {
+    for (int i = 0; i < count; ++i) {
+        if (strcmp(str[i], string) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void check_number_markets (const STOCK_LIST *stock) {
+    int count = 0;
+    char str[6][MAXLEN];
+
+    for (int i = 0; i < stock->size; ++i) {
+        if (!in_array(stock[i].market, count, str)) {
+            strcpy(str[count], stock[i].market);
+            count++;
+        }
+    }
+    for (int i = 0; i < count; ++i) {
+        printf("%s\n", str[i]);
+    }
+
+    if (count > 2) {
+        printf("MERCADOS A MAIS %d\n", count);
+        exit(EXIT_FAILURE);
+    }
+}
+
 void read_stock_file (FILE *file, STOCK_LIST *stock) {
     int  num_events;
     char end_char, end_line = '\n', sparator = ';';
@@ -74,23 +103,16 @@ void read_stock_file (FILE *file, STOCK_LIST *stock) {
         num_events = fscanf(file, "%50[^;]%c", stock[i].market, &end_char);
         READING(num_events, end_char, sparator, "ERRO NA %dº ACAO\n", i + 1);
 
-        //count = 0;
-        /*for (int j = 0; j < i; ++j) {
-            if (strcmp(stock[i].market, stock[j].market) != 0)
-                count++;
-        }
-        if (count > 3) {
-            printf("MERCADOS A MAIS\n");
-            exit(EXIT_FAILURE);
-        }*/
 
         num_events = fscanf(file, "%50[^;]%c", stock[i].name, &end_char);
         READING(num_events, end_char, sparator, "ERRO NA %dº ACAO\n", i + 1);
 
         num_events = fscanf(file, "%d%c", &stock[i].price, &end_char);
         READING(num_events, end_line, sparator, "ERRO NA %dº ACAO\n", i + 1);
+
         stock->size++;
     }
+    check_number_markets(stock);
 }
 
 void init_stock(STOCK_LIST *stock) {
