@@ -5,15 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <pthread.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <unistd.h>
 #include <arpa/inet.h>
 
 //#define DEGUG
 //#define DEBUG2
 #define READING(X,Y,Z, ...) if (X != 2 && Y != Z)  { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 #define CHECK(X, ...)       if (X == -1)           { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
+#define CHECK_PTHR(X, ...)  if (X == EXIT_FAILURE) { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
+
 
 #define BUFLEN     1024
 #define PORT       9876
@@ -43,6 +46,11 @@ typedef struct _STOCK_LIST {
     int  price;
 } STOCK_LIST;
 
+typedef struct _ADMIN_SERVER_ARGS {
+    ADMIN admin;
+    USER *users;
+} ADMIN_SERVER_ARGS;
+
 
 FILE* check_file (const char *);
 ADMIN read_admin_file (FILE *);
@@ -50,7 +58,7 @@ int   read_number_users (FILE *);
 void  read_user_file (FILE *, USER *, int);
 void  init(STOCK_LIST *);
 void  read_stock_file (FILE *, STOCK_LIST *);
-void  admin_usage (ADMIN, USER *);
+void* admin_usage (void *);
 
 
 int REFRESH_TIME;

@@ -8,7 +8,7 @@ OBJS = server.o read_file.o terminalAdmin.o
 all:	prog
 
 prog:	$(OBJS)
-		$(CC) $(FLAGS) $(OBJS) -o prog
+		$(CC) $(FLAGS) -pthread $(OBJS) -o prog
 
 debug:	$(OBJS)
 		$(CC) $(CFLAGS) $(OBJS) -DDEBUG -o prog

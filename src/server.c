@@ -49,7 +49,15 @@ int main() {
     #endif
 
     // server
-    admin_usage(admin, users);
+    ADMIN_SERVER_ARGS argumento;
+    argumento.admin = admin;
+    argumento.users = users;
+
+    pthread_t admin_server;
+
+    CHECK_PTHR(pthread_create(&admin_server, NULL, admin_usage, (void *) &argumento), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
+    //admin_usage(admin, users);
 
     fclose(file);
     return 0;

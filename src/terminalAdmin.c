@@ -10,7 +10,12 @@ static int number_spaces(const char *string) {
     return count;
 }
 
-void admin_usage (ADMIN admin, USER *users) {
+void* admin_usage (void *args) {
+    ADMIN_SERVER_ARGS argumento = *((ADMIN_SERVER_ARGS *) args);
+    ADMIN admin  = argumento.admin;
+    USER  *users = argumento.users;
+
+
     SOCKADDRIN terminal_addr, admin_addr;
     socklen_t  t_len = sizeof(admin_addr);
     char       command_line[BUFLEN * 5];
@@ -145,4 +150,5 @@ void admin_usage (ADMIN admin, USER *users) {
         // dar tempo para o admin sair do processo dele
         sleep(2);
     }
+    pthread_exit(NULL);
 }
