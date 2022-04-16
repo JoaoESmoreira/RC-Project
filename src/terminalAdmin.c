@@ -10,7 +10,7 @@ static int number_spaces(const char *string) {
     return count;
 }
 
-bool user_in_list (const USER *users, const char *username) {
+static bool user_in_list (const USER *users, const char *username) {
     for (int i = 0; i < users->pos; ++i) {
         if (strcmp(users[i].name, username) == 0)
             return true;
@@ -81,6 +81,9 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
 static void list (USER *users, char *string) {
     char aux[MAXLEN];
 
+    if (users->pos == 0)
+        strcat(string, "Lista vazia");
+
     for (int i = 0; i < users->pos; ++i) {
         strcat(string, users[i].name); strcat(string, " ");
         strcat(string, users[i].password); strcat(string, " ");
@@ -91,19 +94,32 @@ static void list (USER *users, char *string) {
     }
 }
 
-static void delete (USER *users, USER *new_user, const char *name) {
-    new_user->pos = 0;
+static void delete (USER *users, const char *name) {
 
-    for (int i = 0; i < users->pos; ++i) {
-        if (strcmp(name, users[i].name) != 0) {
-            #ifdef DEBUG
-            printf("%s - %s\n", users[i].name, name);
-            printf("DELETE: %d\n", strcmp(name, users[i].name));
-            #endif
-            new_user[new_user->pos] = users[i];
-            new_user->pos++;
+    if (users->pos > 0) {
+
+        for (int i = 0; i < users->pos; ++i) {
+            if (strcmp(name, users[i].name) == 0) {
+                #ifdef DEBUG
+                printf("%s - %s\n", users[i].name, name);
+                printf("DELETE: %d\n", strcmp(name, users[i].name));
+                #endif
+
+                // eliminar o ultimo
+                if (i == users->pos - 1) {
+                    users->pos--;
+                    break;
+                } 
+
+                // trocar o ultimo com o user a eliminar
+                int pos    = users->pos;
+                users->pos = i;
+                add_user_atributs(users, users[pos - 1].name, users[pos - 1].password, users[pos - 1].markets[0], users[pos - 1].markets[1], users[pos - 1].budget);
+                users->pos = pos - 1;
+                break;
+            }
         }
-    }
+    } 
 }
 
 void* admin_usage (void *args) {
@@ -114,7 +130,7 @@ void* admin_usage (void *args) {
 
     SOCKADDRIN terminal_addr, admin_addr;
     socklen_t  t_len = sizeof(admin_addr);
-    char       command_line[BUFLEN * 5];
+    char       command_line[BUFLEN];
     char       command[BUFLEN];
     int        terminal_fd;
 
@@ -159,7 +175,7 @@ void* admin_usage (void *args) {
 
         // comandos terminal
         while (true) {
-            CHECK(recvfrom(terminal_fd, command_line, BUFLEN * 5, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
+            CHECK(recvfrom(terminal_fd, command_line, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
 
             sscanf(command_line, "%s", command);
 
@@ -195,9 +211,7 @@ void* admin_usage (void *args) {
                 if (number_events != 2) {
                     CHECK(sendto(terminal_fd, (void *) "Erro no comando\n", strlen("Erro no comando\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 } else {
-                    USER new_user[MAXUSERS];
-                    delete(users, new_user, name);
-                    users = new_user;
+                    delete(users, name);
                 }
             }
         }
