@@ -34,7 +34,7 @@ typedef struct _ADMIN {
 typedef struct _USER {
     char name[MAXLEN];
     char password[MAXLEN];
-    char markets[MAXLEN][2];
+    char markets[2][MAXLEN];
     int  budget;
     int  pos;
 } USER;

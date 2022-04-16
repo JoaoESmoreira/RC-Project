@@ -59,6 +59,8 @@ void read_user_file (FILE *file, USER *users, int max_users) {
         num_events = fscanf(file, "%d%c", &users[i].budget, &end_char);
         READING(num_events, end_line, sparator, "ERRO NO %dº USUARIO\n", i + 1);
 
+        strcpy(users[i].markets[0], "-");
+        strcpy(users[i].markets[1], "-");
         users->pos++;
     }
 }
