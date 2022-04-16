@@ -10,6 +10,14 @@ static int number_spaces(const char *string) {
     return count;
 }
 
+bool user_in_list (const USER *users, const char *username) {
+    for (int i = 0; i < users->pos; ++i) {
+        if (strcmp(users[i].name, username) == 0)
+            return true;
+    }
+    return false;
+}
+
 void* admin_usage (void *args) {
     ADMIN_SERVER_ARGS argumento = *((ADMIN_SERVER_ARGS *) args);
     ADMIN admin  = argumento.admin;
@@ -82,12 +90,24 @@ void* admin_usage (void *args) {
                         number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, stock1, stock2, &budget);
 
                         if (number_events  == 6) {
-                            strcpy(users[users->pos].name, username);
-                            strcpy(users[users->pos].password, password);
-                            strcpy(users[users->pos].markets[0], stock1);
-                            strcpy(users[users->pos].markets[1], stock2);
-                            users[users->pos].budget = budget;
-                            users->pos++;
+                            if (!user_in_list(users, username)) {
+                                strcpy(users[users->pos].name, username);
+                                strcpy(users[users->pos].password, password);
+                                strcpy(users[users->pos].markets[0], stock1);
+                                strcpy(users[users->pos].markets[1], stock2);
+                                users[users->pos].budget = budget;
+                                users->pos++;
+                            } else {
+                                for (int i = 0; i < users->pos; ++i) {
+                                    if (strcmp(users[i].name, username) == 0) {
+                                        strcpy(users[i].name, username);
+                                        strcpy(users[i].password, password);
+                                        strcpy(users[i].markets[0], stock1);
+                                        strcpy(users[i].markets[1], stock2);
+                                        users[i].budget = budget;
+                                    }
+                                }
+                            }
                         } else {
 	                        CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                         }
@@ -95,12 +115,24 @@ void* admin_usage (void *args) {
                         number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
 
                         if (number_events  == 5) {
-                            strcpy(users[users->pos].name, username);
-                            strcpy(users[users->pos].password, password);
-                            strcpy(users[users->pos].markets[0], stock1);
-                            strcpy(users[users->pos].markets[1], "-");
-                            users[users->pos].budget = budget;
-                            users->pos++;
+                            if (!user_in_list(users, username)) {
+                                strcpy(users[users->pos].name, username);
+                                strcpy(users[users->pos].password, password);
+                                strcpy(users[users->pos].markets[0], stock1);
+                                strcpy(users[users->pos].markets[1], "-");
+                                users[users->pos].budget = budget;
+                                users->pos++;
+                            } else {
+                                for (int i = 0; i < users->pos; ++i) {
+                                    if (strcmp(users[i].name, username) == 0) {
+                                        strcpy(users[i].name, username);
+                                        strcpy(users[i].password, password);
+                                        strcpy(users[i].markets[0], stock1);
+                                        strcpy(users[i].markets[1], "-");
+                                        users[i].budget = budget;
+                                    }
+                                }
+                            }
                         } else {
 	                        CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                         }
@@ -112,10 +144,15 @@ void* admin_usage (void *args) {
                 }
             } else if (strcmp(command, "LIST") == 0) {
                 char string[BUFLEN] = "";
+                char aux[MAXLEN];
 
                 for(int i = 0; i < users->pos; ++i) {
-                    strcat(string, users[i].name);
-                    strcat(string, "\n");
+                    strcat(string, users[i].name); strcat(string, " ");
+                    strcat(string, users[i].password); strcat(string, " ");
+                    strcat(string, users[i].markets[0]); strcat(string, " ");
+                    strcat(string, users[i].markets[1]); strcat(string, " ");
+                    sprintf(aux, "%d\n", users[i].budget);
+                    strcat(string, aux);
                 }
                 CHECK(sendto(terminal_fd, (void *) string, strlen(string), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
