@@ -73,14 +73,9 @@ REFRESH {new time}
 QUIT
 ```
 
-#### To log out
-```bash
-QUIT
-```
-
 #### To torn of the server
 ```bash
-QUIT SERVER
+QUIT_SERVER
 ```
 
 
