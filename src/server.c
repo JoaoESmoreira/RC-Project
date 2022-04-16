@@ -25,7 +25,7 @@ int main() {
     #endif
 
     STOCK_LIST stock[MAXSTOCK];
-    init(stock);
+    init_stock(stock);
 
     #ifdef DEBUG
     for (int i = 0; i < MAXSTOCK; ++i) {

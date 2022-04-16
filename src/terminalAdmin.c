@@ -18,6 +18,14 @@ bool user_in_list (const USER *users, const char *username) {
     return false;
 }
 
+static void add_user_atributs(USER *users, const char *name, const char *password, const char * stock1, const char * stock2, const int budget) {
+    strcpy(users[users->pos].name, name);
+    strcpy(users[users->pos].password, password);
+    strcpy(users[users->pos].markets[0], stock1);
+    strcpy(users[users->pos].markets[1], stock2);
+    users[users->pos].budget = budget;
+}
+
 static void add_user (USER *users, const char * command_line, int terminal_fd, SOCKADDRIN admin_addr) {
     char command[MAXLEN], username[MAXLEN], password[MAXLEN];
 
@@ -31,20 +39,13 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
 
             if (number_events  == 6) {
                 if (!user_in_list(users, username)) {
-                    strcpy(users[users->pos].name, username);
-                    strcpy(users[users->pos].password, password);
-                    strcpy(users[users->pos].markets[0], stock1);
-                    strcpy(users[users->pos].markets[1], stock2);
-                    users[users->pos].budget = budget;
+                    add_user_atributs(users, username, password, stock1, stock2, budget);
                     users->pos++;
                 } else {
                     for (int i = 0; i < users->pos; ++i) {
                         if (strcmp(users[i].name, username) == 0) {
-                            strcpy(users[i].name, username);
-                            strcpy(users[i].password, password);
-                            strcpy(users[i].markets[0], stock1);
-                            strcpy(users[i].markets[1], stock2);
-                            users[i].budget = budget;
+                            add_user_atributs(users, username, password, stock1, stock2, budget);
+                            break;
                         }
                     }
                 }
@@ -56,20 +57,13 @@ static void add_user (USER *users, const char * command_line, int terminal_fd, S
 
             if (number_events  == 5) {
                 if (!user_in_list(users, username)) {
-                    strcpy(users[users->pos].name, username);
-                    strcpy(users[users->pos].password, password);
-                    strcpy(users[users->pos].markets[0], stock1);
-                    strcpy(users[users->pos].markets[1], "-");
-                    users[users->pos].budget = budget;
+                    add_user_atributs(users, username, password, stock1, "-", budget);
                     users->pos++;
                 } else {
                     for (int i = 0; i < users->pos; ++i) {
                         if (strcmp(users[i].name, username) == 0) {
-                            strcpy(users[i].name, username);
-                            strcpy(users[i].password, password);
-                            strcpy(users[i].markets[0], stock1);
-                            strcpy(users[i].markets[1], "-");
-                            users[i].budget = budget;
+                            add_user_atributs(users, username, password, stock1, "-", budget);
+                            break;
                         }
                     }
                 }

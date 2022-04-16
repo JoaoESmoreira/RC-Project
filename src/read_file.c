@@ -92,7 +92,7 @@ void read_stock_file (FILE *file, STOCK_LIST *stock) {
     }
 }
 
-void init(STOCK_LIST *stock) {
+void init_stock(STOCK_LIST *stock) {
     for (int i = 0; i < MAXSTOCK; ++i) {
         *stock[i].market = '\0';
         *stock[i].name   = '\0';

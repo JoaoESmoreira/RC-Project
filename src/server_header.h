@@ -55,7 +55,7 @@ FILE* check_file (const char *);
 ADMIN read_admin_file (FILE *);
 int   read_number_users (FILE *);
 void  read_user_file (FILE *, USER *, int);
-void  init(STOCK_LIST *);
+void  init_stock(STOCK_LIST *);
 void  read_stock_file (FILE *, STOCK_LIST *);
 void* admin_usage (void *);
 
