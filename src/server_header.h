@@ -11,8 +11,7 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 
-//#define DEGUG
-//#define DEBUG2
+#define DEBUG
 #define READING(X,Y,Z, ...) if (X != 2 && Y != Z)  { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 #define CHECK(X, ...)       if (X == -1)           { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 #define CHECK_PTHR(X, ...)  if (X == EXIT_FAILURE) { printf(__VA_ARGS__); exit(EXIT_FAILURE); }

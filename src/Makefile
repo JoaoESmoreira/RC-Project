@@ -11,7 +11,7 @@ prog:	$(OBJS)
 		$(CC) $(FLAGS) -pthread $(OBJS) -o prog
 
 debug:	$(OBJS)
-		$(CC) $(CFLAGS) $(OBJS) -DDEBUG -o prog
+		$(CC) $(FLAGS) -pthread $(OBJS) -DDEBUG -o prog
 
 clean:	
 		rm $(OBJS) prog

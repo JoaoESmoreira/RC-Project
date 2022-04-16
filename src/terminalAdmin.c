@@ -19,10 +19,10 @@ bool user_in_list (const USER *users, const char *username) {
 }
 
 void* admin_usage (void *args) {
+    // read args
     ADMIN_SERVER_ARGS argumento = *((ADMIN_SERVER_ARGS *) args);
     ADMIN admin  = argumento.admin;
     USER  *users = argumento.users;
-
 
     SOCKADDRIN terminal_addr, admin_addr;
     socklen_t  t_len = sizeof(admin_addr);
@@ -53,13 +53,13 @@ void* admin_usage (void *args) {
 	        CHECK(sendto(terminal_fd, (void *) log_men, strlen(log_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             CHECK(recvfrom(terminal_fd, username, MAXLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
             #ifdef DEBUG
-            printf("Admin said: %s\n", username);
+            printf("Admin said: %s - %d\n", username, strcmp(username, admin.name));
             #endif
 
 	        CHECK(sendto(terminal_fd, (void *) pas_men, strlen(pas_men), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             CHECK(recvfrom(terminal_fd, password, MAXLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
             #ifdef DEBUG
-            printf("Admin said: %s\n", password);
+            printf("Admin said: %s - %d\n", password, strcmp(password, admin.password));
             #endif
 
             if (strcmp(username, admin.name) == 10 && strcmp(password, admin.password) == 10)
@@ -162,7 +162,7 @@ void* admin_usage (void *args) {
                     CHECK(sendto(terminal_fd, (void *) "Erro no comando\n", strlen("Erro no comando\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 }
 
-                #ifdef DEBUG2
+                #ifdef DEBUG
                 printf("%d\n", REFRESH_TIME);
                 #endif
             } else if (strcmp(command, "DEL") == 0) {
