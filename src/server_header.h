@@ -59,7 +59,7 @@ int   read_number_users (FILE *);
 void  read_user_file (FILE *, USER *, int);
 void  init_stock(STOCK_LIST *);
 void  read_stock_file (FILE *, STOCK_LIST *);
-void* admin_usage (void *);
+void* admin_terminal (void *);
 
 
 int REFRESH_TIME;
