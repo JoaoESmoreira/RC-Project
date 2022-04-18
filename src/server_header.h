@@ -21,7 +21,7 @@
 #define PORT       9876
 #define SOCKADDRIN struct sockaddr_in
 
-#define MAXLEN   50
+#define MAXLEN   20
 #define MAXUSERS 10
 #define MAXSTOCK 6 
 

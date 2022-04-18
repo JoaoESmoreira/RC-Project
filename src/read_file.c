@@ -131,6 +131,7 @@ static void check_number_stock (const STOCK_LIST *stock) {
             }
         }
     }
+
     if (total_m1 > 3 || total_m2 > 3) {
         printf("MERCADOS A MAIS %d - %d\n", total_m1, total_m2);
         exit(EXIT_FAILURE);

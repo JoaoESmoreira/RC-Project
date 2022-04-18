@@ -37,10 +37,47 @@ static bool in_stock (const STOCK_LIST *stock, const char *stock1, const char *s
             flag1 = true;
         }
         if (strcmp(stock2, stock[i].name) == 0) {
-            flag1 = true;
+            flag2 = true;
         }
+    #ifdef DEBUG
+        printf("%d - %d\n", strcmp(stock1, stock[i].name), strcmp(stock2, stock[i].name));
+    #endif
     }
-    return flag1 && flag2;
+    if (flag1 == true && flag2 == true) {
+        printf("deu\n");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+static bool delete (USER *users, const char *name) {
+    if (users->size > 0) {
+
+        for (int i = 0; i < users->size; ++i) {
+            if (strcmp(name, users[i].name) == 0) {
+                #ifdef DEBUG
+                printf("%s - %s\n", users[i].name, name);
+                printf("DELETE: %d\n", strcmp(name, users[i].name));
+                #endif
+
+                // eliminar o ultimo
+                if (i == users->size - 1) {
+                    users->size--;
+                    return true;
+                } 
+
+                // trocar o ultimo com o user a eliminar
+                int pos     = users->size;
+                users->size = i;
+                add_user_atributs(users, users[pos - 1].name, users[pos - 1].password, users[pos - 1].markets[0], users[pos - 1].markets[1], users[pos - 1].budget);
+                users->size = pos - 1;
+
+                return true;
+            }
+        }
+    } 
+    return false;
 }
 
 static void add_user (USER *users, const char * command_line, const STOCK_LIST *stock, int terminal_fd, SOCKADDRIN admin_addr) {
@@ -55,7 +92,7 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
             number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, stock1, stock2, &budget);
 
             if (!in_stock(stock, stock1, stock2)) {
-                printf("Nome de bolsas enesistentes\n");
+	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas inesistentes\n\n", strlen("Nome de bolsas inesistentes\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 return;
             }
 
@@ -64,21 +101,17 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                     add_user_atributs(users, username, password, stock1, stock2, budget);
                     users->size++;
                 } else {
-                    for (int i = 0; i < users->size; ++i) {
-                        if (strcmp(users[i].name, username) == 0) {
-                            add_user_atributs(users, username, password, stock1, stock2, budget);
-                            break;
-                        }
-                    }
+                    delete(users, username);
+                    add_user(users, command_line, stock, terminal_fd, admin_addr);
                 }
             } else {
-	            CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+	            CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n\n", strlen("Erro a ler os parametros\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             }
         } else if (spaces == 4) {
             number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
 
             if (!in_stock(stock, stock1, "-")) {
-	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas enesistentes\n", strlen("Nome de bolsas enesistentes\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas inesistentes\n\n", strlen("Nome de bolsas inesistentes\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 return;
             }
 
@@ -87,67 +120,34 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                     add_user_atributs(users, username, password, stock1, "-", budget);
                     users->size++;
                 } else {
-                    for (int i = 0; i < users->size; ++i) {
-                        if (strcmp(users[i].name, username) == 0) {
-                            add_user_atributs(users, username, password, stock1, "-", budget);
-                            break;
-                        }
-                    }
+                    delete(users, username);
+                    add_user(users, command_line, stock, terminal_fd, admin_addr);
                 }
             } else {
-	            CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n", strlen("Erro a ler os parametros\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+	            CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n\n", strlen("Erro a ler os parametros\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             }
         } else {
-	        CHECK(sendto(terminal_fd, (void *) "Numero de parametros errado\n", strlen("Numero de parametros errado\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+	        CHECK(sendto(terminal_fd, (void *) "Numero de parametros errado\n\n", strlen("Numero de parametros errado\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
         }
     } else {
-	    CHECK(sendto(terminal_fd, (void *) "Maximo de users atingido\n", strlen("Maximo de users atingido\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+	    CHECK(sendto(terminal_fd, (void *) "Maximo de users atingido\n\n", strlen("Maximo de users atingido\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
     }
 }
 
 static void list (USER *users, char *string) {
-    char aux[MAXLEN];
-
+    char aux[BUFLEN];
     if (users->size == 0)
         strcat(string, "Lista vazia\n");
 
+    strcat(string, "---------------------------------------------LIST-------------------------------------\n");
+
     for (int i = 0; i < users->size; ++i) {
-        strcat(string, users[i].name); strcat(string, " ");
-        strcat(string, users[i].password); strcat(string, " ");
-        strcat(string, users[i].markets[0]); strcat(string, " ");
-        strcat(string, users[i].markets[1]); strcat(string, " ");
-        sprintf(aux, "%d\n", users[i].budget);
+        sprintf(aux, "| %s | %s | %s | %s | %d |\n" ,users[i].name ,users[i].password ,users[i].markets[0] ,users[i].markets[1] ,users[i].budget);
         strcat(string, aux);
+        strcat(string, "--------------------------------------------------------------------------------------\n");
     }
-    strcat(string, "\n");
 }
 
-static void delete (USER *users, const char *name) {
-    if (users->size > 0) {
-
-        for (int i = 0; i < users->size; ++i) {
-            if (strcmp(name, users[i].name) == 0) {
-                #ifdef DEBUG
-                printf("%s - %s\n", users[i].name, name);
-                printf("DELETE: %d\n", strcmp(name, users[i].name));
-                #endif
-
-                // eliminar o ultimo
-                if (i == users->size - 1) {
-                    users->size--;
-                    break;
-                } 
-
-                // trocar o ultimo com o user a eliminar
-                int pos     = users->size;
-                users->size = i;
-                add_user_atributs(users, users[pos - 1].name, users[pos - 1].password, users[pos - 1].markets[0], users[pos - 1].markets[1], users[pos - 1].budget);
-                users->size = pos - 1;
-                break;
-            }
-        }
-    } 
-}
 
 void* admin_usage (void *args) {
     // read args
@@ -196,13 +196,15 @@ void* admin_usage (void *args) {
             if (strcmp(username, admin.name) == 10 && strcmp(password, admin.password) == 10)
                 break;
 
-            printf("Credencias erradas\n");
+	        CHECK(sendto(terminal_fd, (void *) "Credencias erradas\n\n", strlen("Credencias erradas\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+
         }
 	    CHECK(sendto(terminal_fd, (void *) "Logged in.\n\n", strlen("Logged in.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
 
         // comandos terminal
         while (true) {
+            bzero(command, BUFLEN);
             CHECK(recvfrom(terminal_fd, command_line, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
 
             sscanf(command_line, "%s", command);
@@ -216,8 +218,14 @@ void* admin_usage (void *args) {
 
                 add_user(users, command_line, stock, terminal_fd, admin_addr);
 
+                #ifdef DEBUG
+                for (int i = 0; i < users->size; ++i) {
+                    printf("%s, %s, %d\n", users[i].name, users[i].password, users[i].budget);
+                }
+                #endif
+
             } else if (strcmp(command, "LIST") == 0) {
-                char string[BUFLEN] = "";
+                char string[10 * BUFLEN] = "";
                 
                 list(users, string);
 
@@ -226,8 +234,9 @@ void* admin_usage (void *args) {
             } else if (strcmp(command, "REFRESH") == 0) {
                 int number_events = sscanf(command_line, "%s %d", command, &REFRESH_TIME);
                 if (number_events != 2) {
-                    CHECK(sendto(terminal_fd, (void *) "Erro no comando\n", strlen("Erro no comando\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    CHECK(sendto(terminal_fd, (void *) "Erro no comando\n\n", strlen("Erro no comando\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 }
+                CHECK(sendto(terminal_fd, "Time refreshed\n\n", strlen("Time refreshed\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
                 #ifdef DEBUG
                 printf("%d\n", REFRESH_TIME);
@@ -237,10 +246,16 @@ void* admin_usage (void *args) {
                 int  number_events = sscanf(command_line, "%s %s", command, name);
 
                 if (number_events != 2) {
-                    CHECK(sendto(terminal_fd, (void *) "Erro no comando\n", strlen("Erro no comando\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    CHECK(sendto(terminal_fd, (void *) "Erro no comando\n\n", strlen("Erro no comando\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 } else {
-                    delete(users, name);
+                    if (delete(users, name)) {
+                        CHECK(sendto(terminal_fd, (void *) "User eliminado\n\n", strlen("User eliminado\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    } else {
+                        CHECK(sendto(terminal_fd, (void *) "User nao encontrado\n\n", strlen("User nao encontrado\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                    }
                 }
+            } else {
+                CHECK(sendto(terminal_fd, (void *) "Cmd inexistente\n\n", strlen("Cmd inexistete\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             }
         }
         close(terminal_fd);

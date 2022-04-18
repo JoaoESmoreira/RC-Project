@@ -46,6 +46,7 @@ int main() {
                 printf("Market: %s / Name: %s / Price: %d\n", stock[i].market, stock[i].name, stock[i].price);
             }
         }
+        printf("%d\n", stock->size);
     #endif
 
     // server
