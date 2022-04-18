@@ -58,8 +58,8 @@ int main() {
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_usage, (void *) &argumento), "Erro a crear thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
-    //admin_usage(admin, users);
+    */
 
-    fclose(file);*/
+    fclose(file);
     return 0;
 }
