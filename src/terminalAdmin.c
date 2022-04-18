@@ -1,5 +1,6 @@
 #include "server_header.h"
 
+// return the number of space of a command
 static int number_spaces(const char *string) {
     int count = 0;
 
@@ -10,6 +11,7 @@ static int number_spaces(const char *string) {
     return count;
 }
 
+// return if a user already exist
 static bool user_in_list (const USER *users, const char *username) {
     for (int i = 0; i < users->size; ++i) {
         if (strcmp(users[i].name, username) == 0)
@@ -18,6 +20,7 @@ static bool user_in_list (const USER *users, const char *username) {
     return false;
 }
 
+// add info in last position of struct
 static void add_user_atributs(USER *users, const char *name, const char *password, const char * stock1, const char * stock2, const int budget) {
     strcpy(users[users->size].name, name);
     strcpy(users[users->size].password, password);
@@ -26,6 +29,7 @@ static void add_user_atributs(USER *users, const char *name, const char *passwor
     users[users->size].budget = budget;
 }
 
+// return if the stocks exist
 static bool in_stock (const STOCK_LIST *stock, const char *stock1, const char *stock2) {
     bool flag1 = false, flag2 = false;
 
@@ -39,18 +43,18 @@ static bool in_stock (const STOCK_LIST *stock, const char *stock1, const char *s
         if (strcmp(stock2, stock[i].name) == 0) {
             flag2 = true;
         }
-    #ifdef DEBUG
+        #ifdef DEBUG
         printf("%d - %d\n", strcmp(stock1, stock[i].name), strcmp(stock2, stock[i].name));
-    #endif
+        #endif
     }
     if (flag1 == true && flag2 == true) {
-        printf("deu\n");
         return true;
     } else {
         return false;
     }
 }
 
+// delete a user of struct
 static bool delete (USER *users, const char *name) {
     if (users->size > 0) {
 
@@ -80,6 +84,8 @@ static bool delete (USER *users, const char *name) {
     return false;
 }
 
+// all flow about add a user command
+// add a user to Users struct. If alredy exists override all info about him.
 static void add_user (USER *users, const char * command_line, const STOCK_LIST *stock, int terminal_fd, SOCKADDRIN admin_addr) {
     char command[MAXLEN], username[MAXLEN], password[MAXLEN];
 
@@ -101,6 +107,7 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                     add_user_atributs(users, username, password, stock1, stock2, budget);
                     users->size++;
                 } else {
+                    // if exist, delete it and add him
                     delete(users, username);
                     add_user(users, command_line, stock, terminal_fd, admin_addr);
                 }
@@ -120,6 +127,7 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                     add_user_atributs(users, username, password, stock1, "-", budget);
                     users->size++;
                 } else {
+                    // if exist, delete it and add him
                     delete(users, username);
                     add_user(users, command_line, stock, terminal_fd, admin_addr);
                 }
@@ -134,22 +142,23 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
     }
 }
 
+// store in a string pointer all info about users
 static void list (USER *users, char *string) {
     char aux[BUFLEN];
     if (users->size == 0)
         strcat(string, "Lista vazia\n");
 
-    strcat(string, "---------------------------------------------LIST-------------------------------------\n");
+    strcat(string, "--------------------------------------LIST-------------------------------------\n");
 
     for (int i = 0; i < users->size; ++i) {
         sprintf(aux, "| %s | %s | %s | %s | %d |\n" ,users[i].name ,users[i].password ,users[i].markets[0] ,users[i].markets[1] ,users[i].budget);
         strcat(string, aux);
-        strcat(string, "--------------------------------------------------------------------------------------\n");
+        strcat(string, "-------------------------------------------------------------------------------\n");
     }
 }
 
-
-void* admin_usage (void *args) {
+// the flow of admin terminal run here
+void* admin_terminal (void *args) {
     // read args
     ADMIN_SERVER_ARGS argumento = *((ADMIN_SERVER_ARGS *) args);
     ADMIN admin  = argumento.admin;
@@ -204,9 +213,11 @@ void* admin_usage (void *args) {
 
         // comandos terminal
         while (true) {
+            // read all command_line
             bzero(command, BUFLEN);
             CHECK(recvfrom(terminal_fd, command_line, BUFLEN, MSG_WAITALL, (struct sockaddr *) &admin_addr, (socklen_t *)&t_len), "Erro a recever");
 
+            // search the main command
             sscanf(command_line, "%s", command);
 
             if (strcmp(command, "QUIT") == 0 || strcmp(command, "QUIT_SERVER") == 0) {
@@ -228,7 +239,6 @@ void* admin_usage (void *args) {
                 char string[10 * BUFLEN] = "";
                 
                 list(users, string);
-
                 CHECK(sendto(terminal_fd, (void *) string, strlen(string), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
             } else if (strcmp(command, "REFRESH") == 0) {
@@ -239,7 +249,7 @@ void* admin_usage (void *args) {
                 CHECK(sendto(terminal_fd, "Time refreshed\n\n", strlen("Time refreshed\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
                 #ifdef DEBUG
-                printf("%d\n", REFRESH_TIME);
+                printf("Refresh time: %d\n", REFRESH_TIME);
                 #endif
             } else if (strcmp(command, "DEL") == 0) {
                 char name[MAXLEN];
