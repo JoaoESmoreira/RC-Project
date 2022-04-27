@@ -152,7 +152,7 @@ void read_stock_file (FILE *file, STOCK_LIST *stock) {
         num_events = fscanf(file, "%50[^;]%c", stock[i].name, &end_char);
         READING(num_events, end_char, sparator, "ERRO A LER STOCK\n");
 
-        num_events = fscanf(file, "%d%c", &stock[i].price, &end_char);
+        num_events = fscanf(file, "%f%c", &stock[i].price, &end_char);
         READING(num_events, end_line, sparator, "ERRO A LER STOCK\n");
 
         stock->size++;

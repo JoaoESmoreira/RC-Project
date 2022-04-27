@@ -169,8 +169,8 @@ void* admin_terminal (void *args) {
     socklen_t  t_len = sizeof(admin_addr);
     char       command_line[BUFLEN];
     char       command[BUFLEN];
-    int        terminal_fd;
 
+    CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, stock), "Erro a criar thread\n");
 
     while (strcmp(command, "QUIT_SERVER")) {
 
@@ -272,5 +272,6 @@ void* admin_terminal (void *args) {
         // dar tempo para o admin sair do processo dele
         sleep(2);
     }
+    CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     pthread_exit(NULL);
 }

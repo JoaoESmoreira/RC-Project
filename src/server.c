@@ -1,8 +1,26 @@
 #include "server_header.h"
 
-int main() {
-    REFRESH_TIME = 10;
-    FILE *file  = check_file("configFile.txt");
+
+FILE *file;
+
+void clean_resources() {
+    #ifdef DEBUG
+        printf("\n\nA limpar os recursos...\n");
+    #endif
+
+    CHECK_PTHR(pthread_kill(market_manager_server, SIGKILL), "Pthread_kill failled\n");
+    CHECK_PTHR(pthread_kill(admin_server,          SIGKILL), "Pthread_kill failled\n");
+    close(terminal_fd);
+    fclose(file);
+    exit(0);
+}
+
+
+int main() {	
+    signal(SIGINT, clean_resources);
+    srand(time(NULL));
+    REFRESH_TIME = 2;
+    file  = check_file("configFile.txt");
     ADMIN admin = read_admin_file(file);
 
     #ifdef DEBUG
@@ -43,7 +61,7 @@ int main() {
     #ifdef DEBUG
         for (int i = 0; i < MAXSTOCK; ++i) {
             if (strlen(stock[i].market) != 0) {
-                printf("Market: %s / Name: %s / Price: %d\n", stock[i].market, stock[i].name, stock[i].price);
+                printf("Market: %s / Name: %s / Price: %f\n", stock[i].market, stock[i].name, stock[i].price);
             }
         }
         printf("%d\n", stock->size);
@@ -55,7 +73,6 @@ int main() {
     argumento.users = users;
     argumento.stock = stock;
 
-    pthread_t admin_server;
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento), "Erro a crear thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
