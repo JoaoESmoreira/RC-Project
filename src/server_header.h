@@ -83,5 +83,6 @@ void *market_manager(void *);
 int REFRESH_TIME;
 int terminal_fd;
 pthread_t admin_server, market_manager_server;
+bool control;
 
 #endif

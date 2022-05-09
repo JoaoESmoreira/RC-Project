@@ -170,7 +170,6 @@ void* admin_terminal (void *args) {
     char       command_line[BUFLEN];
     char       command[BUFLEN];
 
-    CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, stock), "Erro a criar thread\n");
 
     while (strcmp(command, "QUIT_SERVER")) {
 
@@ -220,11 +219,19 @@ void* admin_terminal (void *args) {
             // search the main command
             sscanf(command_line, "%s", command);
 
-            if (strcmp(command, "QUIT") == 0 || strcmp(command, "QUIT_SERVER") == 0) {
+            if (strcmp(command, "QUIT") == 0) {
 	            CHECK(sendto(terminal_fd, (void *) "Logged out.\n\n", strlen("Logged out.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
 
                 close(terminal_fd);
                 break;
+
+            } else if (strcmp(command, "QUIT_SERVER") == 0) {
+	            CHECK(sendto(terminal_fd, (void *) "Logged out.\n\n", strlen("Logged out.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
+                control = false;
+                close(terminal_fd);
+                exit(0);
+                break;
+
             } else if (strcmp(command, "ADD_USER") == 0) {
 
                 add_user(users, command_line, stock, terminal_fd, admin_addr);
@@ -272,6 +279,6 @@ void* admin_terminal (void *args) {
         // dar tempo para o admin sair do processo dele
         sleep(2);
     }
-    CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
+
     pthread_exit(NULL);
 }

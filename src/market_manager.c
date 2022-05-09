@@ -4,7 +4,8 @@ void* market_manager(void *args) {
     STOCK_LIST *stock = (STOCK_LIST *) args;
     int num;
 
-    while (true) {
+
+    while (control) {
 
         for (int i = 0; i < stock->size; ++i) {
             num = rand() % 2;

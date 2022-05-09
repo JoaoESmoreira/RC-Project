@@ -7,19 +7,27 @@ void clean_resources() {
     #ifdef DEBUG
         printf("\n\nA limpar os recursos...\n");
     #endif
-
-    CHECK_PTHR(pthread_kill(market_manager_server, SIGKILL), "Pthread_kill failled\n");
-    CHECK_PTHR(pthread_kill(admin_server,          SIGKILL), "Pthread_kill failled\n");
     close(terminal_fd);
     fclose(file);
-    exit(0);
+}
+
+void shutdonw() {
+    #ifdef DEBUG
+        printf("\n\nA here\n");
+    #endif
+    
+    control = false;
+
+    #ifdef DEBUG
+        printf("\n\nA here\n");
+    #endif
 }
 
 
 int main() {	
-    signal(SIGINT, clean_resources);
     srand(time(NULL));
     REFRESH_TIME = 2;
+    control = true;
     file  = check_file("configFile.txt");
     ADMIN admin = read_admin_file(file);
 
@@ -75,9 +83,9 @@ int main() {
 
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, (void *) &stock[0]), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
 
-
-    fclose(file);
     return 0;
 }

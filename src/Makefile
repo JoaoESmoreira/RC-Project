@@ -14,7 +14,7 @@ debug:	$(OBJS)
 		$(CC) $(FLAGS) -pthread $(OBJS) -DDEBUG -o prog
 
 clean:	
-		rm $(OBJS) prog
+		rm $(OBJS) prog server_header.h.gch
 
 zip:
 		zip Projeto.zip -r *.c *.h *.pdf Makefile configFile.txt
