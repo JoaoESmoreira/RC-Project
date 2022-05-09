@@ -7,20 +7,7 @@ void clean_resources() {
     #ifdef DEBUG
         printf("\n\nA limpar os recursos...\n");
     #endif
-    close(terminal_fd);
     fclose(file);
-}
-
-void shutdonw() {
-    #ifdef DEBUG
-        printf("\n\nA here\n");
-    #endif
-    
-    control = false;
-
-    #ifdef DEBUG
-        printf("\n\nA here\n");
-    #endif
 }
 
 
@@ -87,5 +74,6 @@ int main() {
     CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
 
+    clean_resources();
     return 0;
 }
