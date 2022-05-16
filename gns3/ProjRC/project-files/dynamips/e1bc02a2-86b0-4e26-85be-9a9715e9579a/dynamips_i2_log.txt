@@ -1,0 +1,22 @@
+May 16 11:32:25.261 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
+May 16 11:32:25.262 HYPERVISOR: Started on IP = localhost, TCP port = 60891.
+May 16 11:32:25.270 HYPERVISOR: exec_cmd: hypervisor version 
+May 16 11:32:25.270 HYPERVISOR: exec_cmd: hypervisor working_dir /media/sf_RC/ProjRC/project-files/dynamips 
+May 16 11:32:25.271 GENERAL: working_dir=/media/sf_RC/ProjRC/project-files/dynamips
+May 16 11:32:25.271 HYPERVISOR: exec_cmd: hypervisor working_dir /media/sf_RC/ProjRC/project-files/dynamips/ffadd27c-50ee-4af2-9f19-2374700282b9 
+May 16 11:32:25.272 GENERAL: working_dir=/media/sf_RC/ProjRC/project-files/dynamips/ffadd27c-50ee-4af2-9f19-2374700282b9
+May 16 11:32:25.273 HYPERVISOR: exec_cmd: vm create R3 3 c2600 
+May 16 11:32:25.275 VM: VM R3 created.
+May 16 11:32:25.276 HYPERVISOR: exec_cmd: vm set_con_tcp_port R3 5010 
+May 16 11:32:25.277 HYPERVISOR: exec_cmd: c2600 get_mac_addr R3 
+May 16 11:32:25.278 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 11:32:25.278 HYPERVISOR: exec_cmd: vm set_idle_pc R3 0x81879690 
+May 16 11:32:25.279 HYPERVISOR: exec_cmd: vm set_ios R3 /home/user/GNS3/images/IOS/c2600_v2.image 
+May 16 11:32:25.280 HYPERVISOR: exec_cmd: c2600 set_mac_addr R3 c803.083f.0000 
+May 16 11:32:25.281 HYPERVISOR: exec_cmd: vm set_nvram R3 200 
+May 16 11:32:25.282 HYPERVISOR: exec_cmd: vm set_ram R3 80 
+May 16 11:32:25.282 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 11:32:25.283 HYPERVISOR: exec_cmd: vm slot_add_binding R3 1 0 NM-1FE-TX 
+May 16 11:32:25.284 HYPERVISOR: exec_cmd: vm set_sparse_mem R3 1 
+May 16 11:32:25.284 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 11:32:25.285 HYPERVISOR: exec_cmd: vm slot_add_binding R3 0 16 WIC-1T 
