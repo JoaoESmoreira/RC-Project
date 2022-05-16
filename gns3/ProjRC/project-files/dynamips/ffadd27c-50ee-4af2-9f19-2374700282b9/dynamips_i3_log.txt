@@ -1,0 +1,37 @@
+May 16 10:07:27.939 HYPERVISOR: Release 0.2.21-amd64/Linux (tag 2019071212)
+May 16 10:07:27.939 HYPERVISOR: Started on IP = localhost, TCP port = 55365.
+May 16 10:07:27.944 HYPERVISOR: exec_cmd: hypervisor version 
+May 16 10:07:27.944 HYPERVISOR: exec_cmd: hypervisor working_dir /media/sf_RC/ProjRC/project-files/dynamips 
+May 16 10:07:27.945 GENERAL: working_dir=/media/sf_RC/ProjRC/project-files/dynamips
+May 16 10:07:27.945 HYPERVISOR: exec_cmd: hypervisor working_dir /media/sf_RC/ProjRC/project-files/dynamips/ffadd27c-50ee-4af2-9f19-2374700282b9 
+May 16 10:07:27.946 GENERAL: working_dir=/media/sf_RC/ProjRC/project-files/dynamips/ffadd27c-50ee-4af2-9f19-2374700282b9
+May 16 10:07:27.947 HYPERVISOR: exec_cmd: vm create R3 3 c2600 
+May 16 10:07:27.950 VM: VM R3 created.
+May 16 10:07:27.953 HYPERVISOR: exec_cmd: vm set_con_tcp_port R3 5010 
+May 16 10:07:27.953 HYPERVISOR: exec_cmd: c2600 get_mac_addr R3 
+May 16 10:07:27.954 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:07:27.955 HYPERVISOR: exec_cmd: vm set_idle_pc R3 0x81879690 
+May 16 10:07:27.956 HYPERVISOR: exec_cmd: vm set_ios R3 /home/user/GNS3/images/IOS/c2600_v2.image 
+May 16 10:07:27.956 HYPERVISOR: exec_cmd: c2600 set_mac_addr R3 c803.083f.0000 
+May 16 10:07:27.957 HYPERVISOR: exec_cmd: vm set_nvram R3 200 
+May 16 10:07:27.958 HYPERVISOR: exec_cmd: vm set_ram R3 80 
+May 16 10:07:27.962 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:07:27.963 HYPERVISOR: exec_cmd: vm slot_add_binding R3 1 0 NM-1FE-TX 
+May 16 10:07:27.964 HYPERVISOR: exec_cmd: vm set_sparse_mem R3 1 
+May 16 10:07:27.964 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:07:27.965 HYPERVISOR: exec_cmd: vm slot_add_binding R3 0 16 WIC-1T 
+May 16 10:07:28.798 HYPERVISOR: exec_cmd: nio create_udp udp-8864e1cb-fa47-4240-837a-278b1cf353ab 10014 127.0.0.1 10015 
+May 16 10:07:29.020 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R3 1 0 udp-8864e1cb-fa47-4240-837a-278b1cf353ab 
+May 16 10:07:29.020 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:07:29.390 HYPERVISOR: exec_cmd: nio create_udp udp-e38c98bd-003e-4464-8025-703b27506605 10022 127.0.0.1 10023 
+May 16 10:07:29.392 HYPERVISOR: exec_cmd: vm slot_add_nio_binding R3 0 0 udp-e38c98bd-003e-4464-8025-703b27506605 
+May 16 10:07:29.393 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:10:28.427 HYPERVISOR: exec_cmd: vm set_ghost_status R3 2 
+May 16 10:10:28.429 HYPERVISOR: exec_cmd: vm set_ghost_file R3 /media/sf_RC/ProjRC/project-files/dynamips/c2600_v2.image-80.ghost 
+May 16 10:10:28.430 HYPERVISOR: exec_cmd: vm get_status R3 
+May 16 10:10:28.431 HYPERVISOR: exec_cmd: vm set_config R3 configs/i3_startup-config.cfg 
+May 16 10:10:28.432 HYPERVISOR: exec_cmd: vm start R3 
+May 16 10:10:28.437 GHOST: loaded ghost image /media/sf_RC/ProjRC/project-files/dynamips/c2600_v2.image-80.ghost (fd=13) at addr=0x7f410b000000 (size=0x5000000)
+May 16 10:10:28.438 GHOST: loaded image /media/sf_RC/ProjRC/project-files/dynamips/c2600_v2.image-80.ghost successfully.
+May 16 10:10:59.880 HYPERVISOR: exec_cmd: vm extract_config R3 
+May 16 10:43:32.696 HYPERVISOR: exec_cmd: vm extract_config R3 
