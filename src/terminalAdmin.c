@@ -229,7 +229,7 @@ void* admin_terminal (void *args) {
 	            CHECK(sendto(terminal_fd, (void *) "Logged out.\n\n", strlen("Logged out.\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 control = false;
                 close(terminal_fd);
-                exit(0);
+                //exit(0);
                 break;
 
             } else if (strcmp(command, "ADD_USER") == 0) {

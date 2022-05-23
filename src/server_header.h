@@ -13,6 +13,9 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 
+#include <netdb.h>
+#include <netinet/in.h>
+
 #define DEBUG
 #define READING(X, Y, Z, ...) \
     if (X != 2 && Y != Z)     \
@@ -33,9 +36,11 @@
         exit(EXIT_FAILURE);  \
     }
 
-#define BUFLEN 1024
-#define PORT 9876
+#define PORT_BOLSA 8000
+#define PORT       9876
+#define BUFLEN     1024
 #define SOCKADDRIN struct sockaddr_in
+#define SOCKADDR   struct sockaddr
 
 #define MAXLEN 20
 #define MAXUSERS 10
@@ -73,16 +78,17 @@ typedef struct _ADMIN_SERVER_ARGS
 
 FILE *check_file(const char *);
 ADMIN read_admin_file(FILE *);
-int read_number_users(FILE *);
+int  read_number_users(FILE *);
 void read_user_file(FILE *, USER *, int);
 void init_stock(STOCK_LIST *);
 void read_stock_file(FILE *, STOCK_LIST *);
 void *admin_terminal(void *);
 void *market_manager(void *);
+void *user_interaction();
 
 int REFRESH_TIME;
 int terminal_fd;
-pthread_t admin_server, market_manager_server;
+pthread_t admin_server, market_manager_server, user_interaction_server;
 bool control;
 
 #endif

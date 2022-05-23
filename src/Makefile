@@ -1,6 +1,6 @@
 CC = gcc
 FLAGS = -g -Wall -Wextra
-OBJS = server.o read_file.o terminalAdmin.o market_manager.o
+OBJS = server.o read_file.o terminalAdmin.o market_manager.o serverUser.o
 .PHONY: all clean
 
 
@@ -27,3 +27,4 @@ server.o:			server.c terminalAdmin.c read_file.c
 read_file.o:		read_file.c server_header.h
 terminalAdmin.o:	terminalAdmin.c server_header.h
 market_manager.o:	market_manager.c server_header.h
+serverUser.o:		serverUser.c server_header.h

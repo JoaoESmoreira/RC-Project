@@ -9,7 +9,7 @@ void* market_manager(void *args) {
 
         for (int i = 0; i < stock->size; ++i) {
             num = rand() % 2;
-            if (num == 0 && stock[i].price > 0) {
+            if (num == 0 && stock[i].price > 0.1) {
                 stock[i].price -= 0.1;
             } else {
                 stock[i].price += 0.1;
@@ -26,5 +26,7 @@ void* market_manager(void *args) {
         #endif
     }
 
+
+    printf("HERE\n");
     pthread_exit(NULL);
 }
