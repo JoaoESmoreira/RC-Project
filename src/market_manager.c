@@ -26,7 +26,8 @@ void* market_manager(void *args) {
         #endif
     }
 
-
-    printf("HERE\n");
+    #ifdef DEBUG
+    printf("Market off\n");
+    #endif
     pthread_exit(NULL);
 }

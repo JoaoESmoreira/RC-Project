@@ -71,7 +71,7 @@ int main() {
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, (void *) &stock[0]), "Erro a crear thread\n");
-    CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, NULL), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, (void *) &users[0]), "Erro a crear thread\n");
     CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");

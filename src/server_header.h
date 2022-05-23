@@ -76,6 +76,13 @@ typedef struct _ADMIN_SERVER_ARGS
     STOCK_LIST *stock; 
 } ADMIN_SERVER_ARGS;
 
+typedef struct _CLIENT_ARGS
+{
+    int client_fd;
+    USER *users;
+} CLIENT_ARGS;
+
+
 FILE *check_file(const char *);
 ADMIN read_admin_file(FILE *);
 int  read_number_users(FILE *);
@@ -84,7 +91,7 @@ void init_stock(STOCK_LIST *);
 void read_stock_file(FILE *, STOCK_LIST *);
 void *admin_terminal(void *);
 void *market_manager(void *);
-void *user_interaction();
+void *user_interaction(void *);
 
 int REFRESH_TIME;
 int terminal_fd;

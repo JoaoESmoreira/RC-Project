@@ -280,5 +280,9 @@ void* admin_terminal (void *args) {
         sleep(2);
     }
 
+    #ifdef DEBUG
+    printf("Admin server off\n");
+    #endif
+
     pthread_exit(NULL);
 }
