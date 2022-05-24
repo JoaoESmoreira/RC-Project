@@ -76,11 +76,18 @@ typedef struct _ADMIN_SERVER_ARGS
     STOCK_LIST *stock; 
 } ADMIN_SERVER_ARGS;
 
-typedef struct _CLIENT_ARGS
+typedef struct _CLIENT_SERVER_ARGS
+{
+    USER *users;
+    STOCK_LIST *stock; 
+} CLIENT_SERVER_ARGS;
+
+typedef struct _USER_ARGS
 {
     int client_fd;
     USER *users;
-} CLIENT_ARGS;
+    STOCK_LIST *stock; 
+} USER_ARGS;
 
 
 FILE *check_file(const char *);

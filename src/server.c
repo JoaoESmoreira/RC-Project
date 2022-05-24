@@ -63,15 +63,19 @@ int main() {
     #endif
 
     // server
-    ADMIN_SERVER_ARGS argumento;
-    argumento.admin = admin;
-    argumento.users = users;
-    argumento.stock = stock;
+    ADMIN_SERVER_ARGS argumento_adn;
+    argumento_adn.admin = admin;
+    argumento_adn.users = users;
+    argumento_adn.stock = stock;
+
+    CLIENT_SERVER_ARGS argument_cli;
+    argument_cli.users = users;
+    argument_cli.stock = stock;
 
 
-    CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento_adn), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, (void *) &stock[0]), "Erro a crear thread\n");
-    CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, (void *) &users[0]), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, (void *) &argument_cli), "Erro a crear thread\n");
     CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");

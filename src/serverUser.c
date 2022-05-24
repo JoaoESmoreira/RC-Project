@@ -1,24 +1,57 @@
 #include "server_header.h"
 
 
+static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *username, char *dest) {
+    bool flag = false;
+    char string[1024];
+    char aux[200];
+    sprintf(string, "Stocks inscritos: ");
+
+
+    for (int i = 0; i < users->size; ++i) {
+        if (strcmp(username, users[i].name) == 10) {
+            for (int j = 0; j < stock->size; ++j) {
+                if (strcmp(users[i].markets[0], stock[j].name) == 0 || strcmp(users[i].markets[1], stock[j].name) == 0) {
+
+                    strcat(string, stock[j].name);
+                    sprintf(aux, " Preço: %f | ", stock[i].price);
+                    strcat(string, aux);
+
+                    flag = true;
+                }
+            }
+            break;
+        }
+    }
+    if (!flag)
+        strcat(string, "Sem bolsas");
+    char ch = '\n';
+    strncat(string, &ch, 1);
+    printf("%s", string);
+
+    for (int i = 0; string[i] != '\0'; ++i) {
+        dest[i] = string[i];
+    }
+}
+
+// check if the credentials it's ok
 static bool check_credentials(USER *users, char *username, char * password) {
     for (int i = 0; i < users->size; ++i) {
         if (strcmp(username, users[i].name) == 10 && strcmp(password, users[i].password) == 10) {
             return true;
         }
-        #ifdef DEBUG
-            printf("%d - %d\n", strcmp(username, users[i].name), strcmp(password, users[i].password));
-        #endif
     }
     return false;
 }
 
+// all interaction between server ao client
 void* user(void *args) {
-    CLIENT_ARGS *arg = (CLIENT_ARGS *) args;
-    int client_fd    = arg->client_fd;
-    USER *users      = arg->users;
+    USER_ARGS *arg    = (USER_ARGS *) args;
+    int client_fd     = arg->client_fd;
+    USER *users       = arg->users;
+    STOCK_LIST *stock = arg->stock;
 
-    char buf[BUFLEN], username[MAXLEN], password[MAXLEN];
+    char username[MAXLEN], password[MAXLEN];
 
     do {
         CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
@@ -29,18 +62,21 @@ void* user(void *args) {
     } while (!check_credentials(users, username, password));
     CHECK(write(client_fd, "Logged in\n", sizeof("Logged in\n")), "ERRO A ESCREVER\n");
 
+    char string[BUFLEN];
+    list_stock_avaible(stock, users, username, string);
+    CHECK(write(client_fd, string, strlen(string)), "ERRO A ESCREVER\n");
 
-    #ifdef DEBUG
-        printf("User said: %s - %s\n", username, password);
-    #endif
+
     close(client_fd);
     sleep(2);
     pthread_exit(NULL);
 }
 
-
+// accept the clients and send them to the user function
 void* user_interaction(void *args) {
-    USER *users = (USER *) args;
+    CLIENT_SERVER_ARGS arg = *((CLIENT_SERVER_ARGS *) args);
+    STOCK_LIST *stock      = arg.stock;
+    USER       *users      = arg.users;
 
 
     SOCKADDRIN server_addr, client_addr;
@@ -64,17 +100,20 @@ void* user_interaction(void *args) {
         if (!control)
             break;
 
-        CLIENT_ARGS arg;
+        USER_ARGS arg;
         arg.client_fd = client_fd[total_users-1];
         arg.users     = users;
+        arg.stock     = stock;
 
         pthread_create(&id[total_users-1], NULL, user, (void *) &arg);
     }
 
+    // wait for all threads to dead
     for (int i = 0; i < total_users; ++i) {
         pthread_join(id[i], NULL);
     }
 
+    // clean files
     for (int i = 0; i < total_users; ++i) {
         close(client_fd[i]);
     }
