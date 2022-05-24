@@ -50,22 +50,28 @@ void* user(void *args) {
     int client_fd     = arg->client_fd;
     USER *users       = arg->users;
     STOCK_LIST *stock = arg->stock;
+    total_users_loged = total_users_loged + 1;
 
-    char username[MAXLEN], password[MAXLEN];
+    if (total_users_loged < 6) {
+        char username[MAXLEN], password[MAXLEN];
 
-    do {
-        CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
-        CHECK(read(client_fd, username, sizeof(username)), "ERRO A LER\n");
-        CHECK(write(client_fd, "Intoduza sua password\n", sizeof("Intoduza sua password\n")), "ERRO A ESCREVER\n");
-        CHECK(read(client_fd, password, sizeof(password)), "ERRO A LER\n");
+        do {
+            CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
+            CHECK(read(client_fd, username, sizeof(username)), "ERRO A LER\n");
+            CHECK(write(client_fd, "Intoduza sua password\n", sizeof("Intoduza sua password\n")), "ERRO A ESCREVER\n");
+            CHECK(read(client_fd, password, sizeof(password)), "ERRO A LER\n");
 
-    } while (!check_credentials(users, username, password));
-    CHECK(write(client_fd, "Logged in\n", sizeof("Logged in\n")), "ERRO A ESCREVER\n");
+        } while (!check_credentials(users, username, password));
+        CHECK(write(client_fd, "Logged in\n", sizeof("Logged in\n")), "ERRO A ESCREVER\n");
 
-    char string[BUFLEN];
-    list_stock_avaible(stock, users, username, string);
-    CHECK(write(client_fd, string, strlen(string)), "ERRO A ESCREVER\n");
+        char string[BUFLEN];
+        list_stock_avaible(stock, users, username, string);
+        CHECK(write(client_fd, string, strlen(string)), "ERRO A ESCREVER\n");
 
+    } else {
+
+        CHECK(write(client_fd, "Maximo de utilizadores atingido\n", strlen("Maximo de utilizadores atingido\n")), "ERRO A ESCREVER\n");
+    }
 
     close(client_fd);
     sleep(2);

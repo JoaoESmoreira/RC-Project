@@ -72,6 +72,7 @@ int main() {
     argument_cli.users = users;
     argument_cli.stock = stock;
 
+    total_users_loged = 0;
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento_adn), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, (void *) &stock[0]), "Erro a crear thread\n");

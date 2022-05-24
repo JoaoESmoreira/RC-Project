@@ -102,6 +102,7 @@ void *user_interaction(void *);
 
 int REFRESH_TIME;
 int terminal_fd;
+int total_users_loged;
 pthread_t admin_server, market_manager_server, user_interaction_server;
 bool control;
 
