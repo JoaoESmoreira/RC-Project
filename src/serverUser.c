@@ -54,6 +54,7 @@ void* user(void *args) {
 
     if (total_users_loged < 6) {
         char username[MAXLEN], password[MAXLEN];
+        char opc[MAXLEN];
 
         do {
             CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
@@ -67,6 +68,25 @@ void* user(void *args) {
         char string[BUFLEN];
         list_stock_avaible(stock, users, username, string);
         CHECK(write(client_fd, string, strlen(string)), "ERRO A ESCREVER\n");
+
+        while(1){
+            CHECK(write(client_fd, "Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n", sizeof("Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n")), "ERRO A ESCREVER\n");
+            CHECK(read(client_fd, opc, sizeof(opc)), "ERRO A LER\n");
+
+            //switch de opções
+            switch(opt){
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "0":
+                    close(client_fd);
+                    sleep(2);
+                    pthread_exit(NULL);
+                default:
+                    CHECK(write(client_fd, "Opcao introduzida inválida."), sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");
+            }
+        }
 
     } else {
 
