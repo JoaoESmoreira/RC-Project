@@ -14,6 +14,21 @@
 #define CHECK(X, ...) if (X == -1) { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
 
 
+
+bool input_option(int *op) {
+    char aux;
+    
+    int res = scanf("%d%c", op, &aux);
+
+    if (res < 1 || (res == 2 && aux != '\n') ) {
+        scanf("%*[^\n]%*c");
+        printf("Invalid numbers\n");
+        return false;
+    }
+    return true;
+}
+
+
 int main(int argc, char *argv[]) {
     int fd;
     char endServer[100];
@@ -57,23 +72,27 @@ int main(int argc, char *argv[]) {
     } while(strcmp("Logged in!\n", buffer) != 0);
     printf("%s", buffer);
 
-    // read stock allowed    
+    // read stock allowed
     read(fd, buffer, sizeof(buffer));
-    printf("here: %s\n", buffer);
+    printf("%s\n", buffer);
 
-    /*while(1){
+    int option = -1;
+    while(option != 0){
         read(fd, buffer, 1024);
-        printf("%s",buffer);
-        scanf("%s", send);
-        write(fd, send, sizeof(send));    
-        if(strcmp(send, "1") == 0){
+        printf("%s", buffer);
+
+        while (input_option(&option) != true)
+            printf("%s", buffer);
+        write(fd, &option, sizeof(option));    
+
+        /*if(strcmp(send, "1") == 0){
             //vai ter de indicar qual o mercado
             //depois recebe os dados de ip e passa-o para uma thread que irá ler o multicast
         }
         if(strcmp(send, "0") == 0){
             return 0;
-        }
-    }*/
+        }*/
+    }
 
     close(fd);
     printf("HERE\n");

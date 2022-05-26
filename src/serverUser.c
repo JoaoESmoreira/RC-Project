@@ -46,12 +46,12 @@ static bool check_credentials(USER *users, char *username, char * password) {
     return false;
 }
 
-int validate_option(char option) {
+/*int validate_option(char option) {
     if (option >= '0' && option <= '9') {
         return option - '0';
     } 
     return -1;
-}
+}*/
 
 // all interaction between server ao client
 void* user(void *args) {
@@ -63,8 +63,7 @@ void* user(void *args) {
 
     if (total_users_loged < 6) {
         char username[MAXLEN], password[MAXLEN];
-        char opc;
-        int option;
+        int option = -1;
 
         do {
             CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
@@ -77,31 +76,37 @@ void* user(void *args) {
 
         char string[BUFLEN];
         list_stock_avaible(stock, users, username, string);
-        sleep(3);
+        sleep(2);
         CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
-        sleep(3);
-        CHECK(write(client_fd, "HERE\n", sizeof("HERE\n")), "ERRO A ESCREVER\n");
 
-        /*while(1){
+        while(option != 0){
             CHECK(write(client_fd, "Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n", sizeof("Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n")), "ERRO A ESCREVER\n");
-            CHECK(read(client_fd, &opc, sizeof(opc)), "ERRO A LER\n");
-            option = validate_option(opc);
+            CHECK(read(client_fd, &option, sizeof(option)), "ERRO A LER\n");
 
             //switch de opções
             switch(option){
                 case 1:
+                    printf("1\n");
                     break;
                 case 2:
+                    printf("2\n");
+                    break;
+                case 3:
+                    printf("3\n");
+                    break;
+                case 4:
+                    printf("4\n");
+                    break;
+                case 5:
+                    printf("5\n");
                     break;
                 case 0:
-                    close(client_fd);
-                    sleep(2);
-                    pthread_exit(NULL);
-                default:
-                    CHECK(write(client_fd, "Opcao introduzida inválida.", sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");
+                    printf("LOGGED OUT\n");
+                    break;
+                /*default:
+                    CHECK(write(client_fd, "Opcao introduzida inválida.", sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");*/
             }
-        }*/
-
+        }
     } else {
 
         CHECK(write(client_fd, "Maximo de utilizadores atingido\n", strlen("Maximo de utilizadores atingido\n")), "ERRO A ESCREVER\n");
