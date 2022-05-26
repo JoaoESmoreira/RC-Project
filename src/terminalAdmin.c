@@ -106,6 +106,15 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                 if (!user_in_list(users, username)) {
                     add_user_atributs(users, username, password, market1, market2, budget);
                     users->size++;
+                    for (int k = 0; k < users->size; ++k) {
+                        if (strcmp(users[k].name, username) == 0) {
+                            for (int i = 0; i < MAXSTOCK; ++i) {
+                                strcpy(users[k].stock[i].name, stock[i].name);
+                                users[k].stock[i].volume = 0;
+                            }
+                            break;
+                        }
+                    }
                 } else {
                     // if exist, delete it and add him
                     delete(users, username);
@@ -126,6 +135,16 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
                 if (!user_in_list(users, username)) {
                     add_user_atributs(users, username, password, market1, "-", budget);
                     users->size++;
+                    for (int k = 0; k < users->size; ++k) {
+                        printf("dif %d\n", strcmp(users[k].name, username) == 0);
+                        if (strcmp(users[k].name, username) == 0) {
+                            for (int i = 0; i < MAXSTOCK; ++i) {
+                                strcpy(users[k].stock[i].name, stock[i].name);
+                                users[k].stock[i].volume = 0;
+                            }
+                            break;
+                        }
+                    }
                 } else {
                     // if exist, delete it and add him
                     delete(users, username);
@@ -238,7 +257,9 @@ void* admin_terminal (void *args) {
 
                 #ifdef DEBUG
                 for (int i = 0; i < users->size; ++i) {
-                    printf("%s, %s, %d\n", users[i].name, users[i].password, users[i].budget);
+                    for (int j = 0; j < MAXSTOCK; ++j) {
+                        printf("%s -%d\n", users[i].stock[j].name, users[i].stock[j].volume);
+                    }
                 }
                 #endif
 

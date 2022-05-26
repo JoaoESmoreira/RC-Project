@@ -14,10 +14,10 @@ USER* getUser(USER *users, const char *username) {
 
 void list_stock_wallet(USER *User, char *dest) {
     char string[BUFLEN];
+    string[0] = '\0';
     char aux[200];
 
     for (int i = 0; i < MAXSTOCK; ++i) {
-        printf("HERE\n");
         sprintf(aux, "Nome stock: ");
         strcat(string, aux);
         strcat(string, User->stock[i].name);
@@ -101,6 +101,8 @@ void* user(void *args) {
             CHECK(write(client_fd, "Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n", sizeof("Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n")), "ERRO A ESCREVER\n");
             CHECK(read(client_fd, &option, sizeof(option)), "ERRO A LER\n");
 
+            bzero(string, sizeof(string));
+            
             //switch de opções
             switch(option){
                 case 1:
