@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'
+make: Nothing to be done for 'all'.
+make: Leaving directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'
+ 

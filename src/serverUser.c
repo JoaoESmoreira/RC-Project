@@ -1,6 +1,6 @@
 #include "server_header.h"
 
-
+//pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *username, char *dest) {
     bool flag = false;
     char string[1024];
@@ -8,13 +8,18 @@ static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *user
     sprintf(string, "Stocks inscritos: ");
 
 
+    printf("HERE\n");
     for (int i = 0; i < users->size; ++i) {
-        if (strcmp(username, users[i].name) == 10) {
+        printf("HERE\n");
+        if (strcmp(username, users[i].name) == 0) {
+            printf("USER ENCONTRADO\n");
+            printf("SEUS MERCADOS: %s -%s\n", users[i].markets[0], users[i].markets[1]);
             for (int j = 0; j < stock->size; ++j) {
+                printf("%d - %d", strcmp(users[i].markets[0], stock[j].name) == 0, strcmp(users[i].markets[1], stock[j].name) == 0);
                 if (strcmp(users[i].markets[0], stock[j].name) == 0 || strcmp(users[i].markets[1], stock[j].name) == 0) {
 
                     strcat(string, stock[j].name);
-                    sprintf(aux, " Preço: %f | ", stock[i].price);
+                    sprintf(aux, " Preço: %f | ", stock[j].price);
                     strcat(string, aux);
 
                     flag = true;
@@ -27,7 +32,6 @@ static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *user
         strcat(string, "Sem bolsas");
     char ch = '\n';
     strncat(string, &ch, 1);
-    printf("%s", string);
 
     for (int i = 0; string[i] != '\0'; ++i) {
         dest[i] = string[i];
@@ -37,11 +41,18 @@ static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *user
 // check if the credentials it's ok
 static bool check_credentials(USER *users, char *username, char * password) {
     for (int i = 0; i < users->size; ++i) {
-        if (strcmp(username, users[i].name) == 10 && strcmp(password, users[i].password) == 10) {
+        if (strcmp(username, users[i].name) == 0 && strcmp(password, users[i].password) == 0) {
             return true;
         }
     }
     return false;
+}
+
+int validate_option(char option) {
+    if (option >= '0' && option <= '9') {
+        return option - '0';
+    } 
+    return -1;
 }
 
 // all interaction between server ao client
@@ -54,39 +65,44 @@ void* user(void *args) {
 
     if (total_users_loged < 6) {
         char username[MAXLEN], password[MAXLEN];
-        char opc[MAXLEN];
+        char opc;
+        int option;
 
         do {
             CHECK(write(client_fd, "Intoduza o seu nick: \n", sizeof("Intoduza o seu nick: \n")), "ERRO A ESCREVER\n");
             CHECK(read(client_fd, username, sizeof(username)), "ERRO A LER\n");
-            CHECK(write(client_fd, "Intoduza sua password\n", sizeof("Intoduza sua password\n")), "ERRO A ESCREVER\n");
+            CHECK(write(client_fd, "Intoduza sua password: \n", sizeof("Intoduza sua password: \n")), "ERRO A ESCREVER\n");
             CHECK(read(client_fd, password, sizeof(password)), "ERRO A LER\n");
 
         } while (!check_credentials(users, username, password));
-        CHECK(write(client_fd, "Logged in\n", sizeof("Logged in\n")), "ERRO A ESCREVER\n");
+        CHECK(write(client_fd, "Logged in!\n", sizeof("Logged in!\n")), "ERRO A ESCREVER\n");
 
         char string[BUFLEN];
         list_stock_avaible(stock, users, username, string);
-        CHECK(write(client_fd, string, strlen(string)), "ERRO A ESCREVER\n");
+        sleep(3);
+        CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
+        sleep(3);
+        CHECK(write(client_fd, "HERE\n", sizeof("HERE\n")), "ERRO A ESCREVER\n");
 
-        while(1){
+        /*while(1){
             CHECK(write(client_fd, "Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n", sizeof("Menu:\n1) Subscrever um mercado.\n2) Comprar.\n3) Vender.\n4) Ligar ou desligar o feed.\n5) Conteudo da carteira e saldo.\n0) Sair\n")), "ERRO A ESCREVER\n");
-            CHECK(read(client_fd, opc, sizeof(opc)), "ERRO A LER\n");
+            CHECK(read(client_fd, &opc, sizeof(opc)), "ERRO A LER\n");
+            option = validate_option(opc);
 
             //switch de opções
-            switch(opt){
-                case "1":
+            switch(option){
+                case 1:
                     break;
-                case "2":
+                case 2:
                     break;
-                case "0":
+                case 0:
                     close(client_fd);
                     sleep(2);
                     pthread_exit(NULL);
                 default:
-                    CHECK(write(client_fd, "Opcao introduzida inválida."), sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");
+                    CHECK(write(client_fd, "Opcao introduzida inválida.", sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");
             }
-        }
+        }*/
 
     } else {
 
@@ -124,6 +140,7 @@ void* user_interaction(void *args) {
             CHECK((client_fd[total_users++] = accept(sock_fd, (SOCKADDR *) &client_addr, (socklen_t *) &len_addr)), "ERRO NO ACCEPT\n");
         }
         if (!control)
+        // enviar um close
             break;
 
         USER_ARGS arg;
