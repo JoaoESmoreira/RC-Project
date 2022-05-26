@@ -62,15 +62,18 @@ int main() {
         printf("%d\n", stock->size);
     #endif
 
-
-    for (int i = 0; i < MAXSTOCK; ++i) {
-        strcpy(users[i].stock[0].name, stock[i].name);
-        users[i].stock[0].volume = 0;
+    for (int k = 0; k < users->size; ++k) {
+        for (int i = 0; i < MAXSTOCK; ++i) {
+            strcpy(users[k].stock[i].name, stock[i].name);
+            users[k].stock[i].volume = 0;
+        }
     }
 
     #ifdef DEBUG
-        for (int i = 0; i < MAXSTOCK; ++i) {
-            printf("User stock: %s, Quantity: %d\n", users[i].stock[0].name, users[i].stock[0].volume);
+        for (int k = 0; k < users->size; ++k) {
+            for (int i = 0; i < MAXSTOCK; ++i) {
+                printf("User stock: %s, Quantity: %d\n", users[k].stock[i].name, users[k].stock[i].volume);
+            }
         }
     #endif
 

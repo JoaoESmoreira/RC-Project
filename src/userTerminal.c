@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         write(fd, send, strlen(send));
 
 
-        read(fd, buffer, 1024);
+        read(fd, buffer, sizeof(buffer));
     } while(strcmp("Logged in!\n", buffer) != 0);
     printf("%s", buffer);
 
@@ -105,6 +105,8 @@ int main(int argc, char *argv[]) {
                 break;
             case 5:
                 printf("5\n");
+                read(fd, buffer, sizeof(buffer));
+                printf("%s", buffer);
                 break;
             case 0:
                 printf("LOGGED OUT\n");
@@ -113,7 +115,6 @@ int main(int argc, char *argv[]) {
     }
 
     close(fd);
-    printf("HERE\n");
     
     return 0;
 }

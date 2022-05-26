@@ -12,13 +12,29 @@ USER* getUser(USER *users, const char *username) {
     return NULL;
 }
 
+void list_stock_wallet(USER *User, char *dest) {
+    char string[BUFLEN];
+    char aux[200];
+
+    for (int i = 0; i < MAXSTOCK; ++i) {
+        printf("HERE\n");
+        sprintf(aux, "Nome stock: ");
+        strcat(string, aux);
+        strcat(string, User->stock[i].name);
+        sprintf(aux, "; Stock: %d\n", User->stock[i].volume);
+        strcat(string, aux);
+    }
+    // copy to dest
+    for (int i = 0; string[i] != '\0'; ++i) {
+        dest[i] = string[i];
+    }
+}
 
 static void list_stock_avaible(STOCK_LIST *stock, USER *User, char *dest) {
     bool flag = false;
     char string[1024];
     char aux[200];
     sprintf(string, "Stocks inscritos: ");
-
 
     for (int j = 0; j < stock->size; ++j) {
         //printf("%d - %d", strcmp(User->markets[0], stock[j].name) == 0, strcmp(User->markets[1], stock[j].name) == 0);
@@ -35,6 +51,7 @@ static void list_stock_avaible(STOCK_LIST *stock, USER *User, char *dest) {
     char ch = '\n';
     strncat(string, &ch, 1);
 
+    // copy to dest
     for (int i = 0; string[i] != '\0'; ++i) {
         dest[i] = string[i];
     }
@@ -77,7 +94,7 @@ void* user(void *args) {
 
         char string[BUFLEN];
         list_stock_avaible(stock, User, string);
-        sleep(2);
+        sleep(1);
         CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
 
         while(option != 0){
@@ -100,6 +117,9 @@ void* user(void *args) {
                     break;
                 case 5:
                     printf("5\n");
+                    list_stock_wallet(User, string);
+                    printf("%s", string);
+                    CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
                     break;
                 case 0:
                     printf("LOGGED OUT\n");
