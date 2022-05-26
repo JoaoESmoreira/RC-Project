@@ -1,31 +1,35 @@
 #include "server_header.h"
 
 //pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *username, char *dest) {
+
+
+USER* getUser(USER *users, const char *username) {
+    for (int i = 0; i < users->size; ++i) {
+        if (strcmp(username, users[i].name) == 0) {
+            return &users[i];
+        }
+    }
+    return NULL;
+}
+
+
+static void list_stock_avaible(STOCK_LIST *stock, USER *User, char *dest) {
     bool flag = false;
     char string[1024];
     char aux[200];
     sprintf(string, "Stocks inscritos: ");
 
 
-    for (int i = 0; i < users->size; ++i) {
-        if (strcmp(username, users[i].name) == 0) {
-            //printf("USER ENCONTRADO\n");
-            //printf("SEUS MERCADOS: %s -%s\n", users[i].markets[0], users[i].markets[1]);
-            for (int j = 0; j < stock->size; ++j) {
-                printf("%d - %d", strcmp(users[i].markets[0], stock[j].name) == 0, strcmp(users[i].markets[1], stock[j].name) == 0);
-                if (strcmp(users[i].markets[0], stock[j].market) == 0 || strcmp(users[i].markets[1], stock[j].market) == 0) {
-
-                    strcat(string, stock[j].name);
-                    sprintf(aux, " Preço: %f | ", stock[j].price);
-                    strcat(string, aux);
-
-                    flag = true;
-                }
-            }
-            break;
+    for (int j = 0; j < stock->size; ++j) {
+        //printf("%d - %d", strcmp(User->markets[0], stock[j].name) == 0, strcmp(User->markets[1], stock[j].name) == 0);
+        if (strcmp(User->markets[0], stock[j].market) == 0 || strcmp(User->markets[1], stock[j].market) == 0) {
+            strcat(string, stock[j].name);
+            sprintf(aux, " Preço: %f | ", stock[j].price);
+            strcat(string, aux);
+            flag = true;
         }
     }
+
     if (!flag)
         strcat(string, "Sem bolsas");
     char ch = '\n';
@@ -46,12 +50,6 @@ static bool check_credentials(USER *users, char *username, char * password) {
     return false;
 }
 
-/*int validate_option(char option) {
-    if (option >= '0' && option <= '9') {
-        return option - '0';
-    } 
-    return -1;
-}*/
 
 // all interaction between server ao client
 void* user(void *args) {
@@ -74,8 +72,11 @@ void* user(void *args) {
         } while (!check_credentials(users, username, password));
         CHECK(write(client_fd, "Logged in!\n", sizeof("Logged in!\n")), "ERRO A ESCREVER\n");
 
+        USER *User = getUser(users, username);
+
+
         char string[BUFLEN];
-        list_stock_avaible(stock, users, username, string);
+        list_stock_avaible(stock, User, string);
         sleep(2);
         CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
 

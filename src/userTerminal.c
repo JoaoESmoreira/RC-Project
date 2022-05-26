@@ -88,10 +88,28 @@ int main(int argc, char *argv[]) {
         /*if(strcmp(send, "1") == 0){
             //vai ter de indicar qual o mercado
             //depois recebe os dados de ip e passa-o para uma thread que irá ler o multicast
-        }
-        if(strcmp(send, "0") == 0){
-            return 0;
         }*/
+
+        switch(option){
+            case 1:
+                printf("1\n");
+                break;
+            case 2:
+                printf("2\n");
+                break;
+            case 3:
+                printf("3\n");
+                break;
+            case 4:
+                printf("4\n");
+                break;
+            case 5:
+                printf("5\n");
+                break;
+            case 0:
+                printf("LOGGED OUT\n");
+                break;
+        }
     }
 
     close(fd);
