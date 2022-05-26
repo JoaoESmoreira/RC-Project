@@ -8,15 +8,13 @@ static void list_stock_avaible(STOCK_LIST *stock, USER * users, const char *user
     sprintf(string, "Stocks inscritos: ");
 
 
-    printf("HERE\n");
     for (int i = 0; i < users->size; ++i) {
-        printf("HERE\n");
         if (strcmp(username, users[i].name) == 0) {
-            printf("USER ENCONTRADO\n");
-            printf("SEUS MERCADOS: %s -%s\n", users[i].markets[0], users[i].markets[1]);
+            //printf("USER ENCONTRADO\n");
+            //printf("SEUS MERCADOS: %s -%s\n", users[i].markets[0], users[i].markets[1]);
             for (int j = 0; j < stock->size; ++j) {
                 printf("%d - %d", strcmp(users[i].markets[0], stock[j].name) == 0, strcmp(users[i].markets[1], stock[j].name) == 0);
-                if (strcmp(users[i].markets[0], stock[j].name) == 0 || strcmp(users[i].markets[1], stock[j].name) == 0) {
+                if (strcmp(users[i].markets[0], stock[j].market) == 0 || strcmp(users[i].markets[1], stock[j].market) == 0) {
 
                     strcat(string, stock[j].name);
                     sprintf(aux, " Preço: %f | ", stock[j].price);

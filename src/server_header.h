@@ -52,11 +52,18 @@ typedef struct _ADMIN
     char password[MAXLEN];
 } ADMIN;
 
+typedef struct _STOCK
+{
+    char name[MAXLEN];
+    int  volume;
+} USER_STOCK;
+
 typedef struct _USER
 {
     char name[MAXLEN];
     char password[MAXLEN];
-    char markets[2][MAXLEN];
+    char markets[2][MAXLEN];        // mercados que tem acesso
+    USER_STOCK stock[6];            // infos sobre as açoes
     int  budget;
     int  size; // in case of list
 } USER;
@@ -68,6 +75,7 @@ typedef struct _STOCK_LIST
     float price;
     int   size; // in case of list
 } STOCK_LIST;
+
 
 typedef struct _ADMIN_SERVER_ARGS
 {

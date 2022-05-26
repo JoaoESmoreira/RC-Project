@@ -62,6 +62,18 @@ int main() {
         printf("%d\n", stock->size);
     #endif
 
+
+    for (int i = 0; i < MAXSTOCK; ++i) {
+        strcpy(users[i].stock[0].name, stock[i].name);
+        users[i].stock[0].volume = 0;
+    }
+
+    #ifdef DEBUG
+        for (int i = 0; i < MAXSTOCK; ++i) {
+            printf("User stock: %s, Quantity: %d\n", users[i].stock[0].name, users[i].stock[0].volume);
+        }
+    #endif
+
     // server
     ADMIN_SERVER_ARGS argumento_adn;
     argumento_adn.admin = admin;

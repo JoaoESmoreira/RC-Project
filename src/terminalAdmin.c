@@ -30,21 +30,21 @@ static void add_user_atributs(USER *users, const char *name, const char *passwor
 }
 
 // return if the stocks exist
-static bool in_stock (const STOCK_LIST *stock, const char *stock1, const char *stock2) {
+static bool in_stock (const STOCK_LIST *stock, const char *market1, const char *market2) {
     bool flag1 = false, flag2 = false;
 
-    if (strcmp(stock2, "-") == 0)
+    if (strcmp(market2, "-") == 0)
         flag2 = true;
 
     for (int i = 0; i < stock->size; ++i) {
-        if (strcmp(stock1, stock[i].name) == 0) {
+        if (strcmp(market1, stock[i].market) == 0) {
             flag1 = true;
         }
-        if (strcmp(stock2, stock[i].name) == 0) {
+        if (strcmp(market2, stock[i].market) == 0) {
             flag2 = true;
         }
         #ifdef DEBUG
-        printf("%d - %d\n", strcmp(stock1, stock[i].name), strcmp(stock2, stock[i].name));
+        printf("%d - %d\n", strcmp(market1, stock[i].market), strcmp(market2, stock[i].market));
         #endif
     }
     if (flag1 == true && flag2 == true) {
@@ -90,21 +90,21 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
     char command[MAXLEN], username[MAXLEN], password[MAXLEN];
 
     if (users->size < MAXUSERS) {
-        char stock1[MAXLEN], stock2[MAXLEN];
+        char market1[MAXLEN], market2[MAXLEN];
         int  spaces = number_spaces(command_line);
         int  number_events, budget;
 
         if (spaces == 5) {
-            number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, stock1, stock2, &budget);
+            number_events = sscanf(command_line, "%s %s %s %s %s %d", command, username, password, market1, market2, &budget);
 
-            if (!in_stock(stock, stock1, stock2)) {
+            if (!in_stock(stock, market1, market2)) {
 	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas inesistentes\n\n", strlen("Nome de bolsas inesistentes\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 return;
             }
 
             if (number_events  == 6) {
                 if (!user_in_list(users, username)) {
-                    add_user_atributs(users, username, password, stock1, stock2, budget);
+                    add_user_atributs(users, username, password, market1, market2, budget);
                     users->size++;
                 } else {
                     // if exist, delete it and add him
@@ -115,16 +115,16 @@ static void add_user (USER *users, const char * command_line, const STOCK_LIST *
 	            CHECK(sendto(terminal_fd, (void *) "Erro a ler os parametros\n\n", strlen("Erro a ler os parametros\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
             }
         } else if (spaces == 4) {
-            number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, stock1, &budget);
+            number_events = sscanf(command_line, "%s %s %s %s %d", command, username, password, market1, &budget);
 
-            if (!in_stock(stock, stock1, "-")) {
+            if (!in_stock(stock, market1, "-")) {
 	            CHECK(sendto(terminal_fd, (void *) "Nome de bolsas inesistentes\n\n", strlen("Nome de bolsas inesistentes\n\n"), MSG_CONFIRM, (struct sockaddr *) &admin_addr, sizeof(admin_addr)), "Erro a enviar\n");
                 return;
             }
 
             if (number_events  == 5) {
                 if (!user_in_list(users, username)) {
-                    add_user_atributs(users, username, password, stock1, "-", budget);
+                    add_user_atributs(users, username, password, market1, "-", budget);
                     users->size++;
                 } else {
                     // if exist, delete it and add him
