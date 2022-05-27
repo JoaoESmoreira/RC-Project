@@ -20,7 +20,7 @@ void* market_manager(void *args) {
         #ifdef DEBUG
             for (int i = 0; i < MAXSTOCK; ++i) {
                 if (strlen(stock[i].market) != 0) {
-                    printf("Market: %s / Name: %s / Price: %f\n", stock[i].market, stock[i].name, stock[i].price);
+                    printf("Market: %s / Name: %s / Price: %f / volume: %d\n", stock[i].market, stock[i].name, stock[i].price, stock[i].volume);
                 }
             }
         #endif

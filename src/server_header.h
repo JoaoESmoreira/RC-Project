@@ -64,7 +64,7 @@ typedef struct _USER
     char password[MAXLEN];
     char markets[2][MAXLEN];        // mercados que tem acesso
     USER_STOCK stock[6];            // infos sobre as açoes
-    int  budget;
+    float budget;
     int  size; // in case of list
 } USER;
 
@@ -73,6 +73,7 @@ typedef struct _STOCK_LIST
     char  market[MAXLEN];
     char  name[MAXLEN];
     float price;
+    int   volume;
     int   size; // in case of list
 } STOCK_LIST;
 

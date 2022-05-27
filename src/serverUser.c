@@ -24,6 +24,9 @@ void list_stock_wallet(USER *User, char *dest) {
         sprintf(aux, "; Stock: %d\n", User->stock[i].volume);
         strcat(string, aux);
     }
+    sprintf(aux, "Saldo: %f\n", User->budget);
+    strcat(string, aux);
+
     // copy to dest
     for (int i = 0; string[i] != '\0'; ++i) {
         dest[i] = string[i];
@@ -67,6 +70,42 @@ static bool check_credentials(USER *users, char *username, char * password) {
     return false;
 }
 
+static int check_stock(STOCK_LIST *stock, const USER *user, const char *name_stock) {
+
+    for (int i = 0; i < MAXSTOCK; ++i) {
+        if (strcmp(stock[i].name, name_stock) == 0) {
+            if(strcmp(stock[i].market, user->markets[0]) == 0 || strcmp(stock[i].market, user->markets[1]) == 0) {
+                printf("DEU CERTO\n\n\n");
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+static bool buy_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, const char *quantity_buy, const char *price_buy) {
+    int   quantity, pos;
+    float price;
+
+    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 || stock[pos].price + 0.02 > price)
+        return false;
+
+    quantity = quantity - quantity % 10;
+    if (stock[pos].volume - quantity < 0 || user->budget - price < 0)
+        return false;
+
+    user->budget      -= price;
+    stock[pos].volume -= quantity;
+    for (int i = 0; i < MAXSTOCK; ++i) {
+        if (strcmp(user->stock[i].name, name_stock) == 0) {
+            user->stock[i].volume += quantity;
+            break;
+        }
+    }
+     
+    return true;
+}
+
 
 // all interaction between server ao client
 void* user(void *args) {
@@ -103,6 +142,8 @@ void* user(void *args) {
 
             bzero(string, sizeof(string));
             
+            char stock_buy[MAXLEN], quantity_buy[MAXLEN], price_buy[MAXLEN];
+
             //switch de opções
             switch(option){
                 case 1:
@@ -110,6 +151,21 @@ void* user(void *args) {
                     break;
                 case 2:
                     printf("2\n");
+
+                    CHECK(read(client_fd, stock_buy, sizeof(stock_buy)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, quantity_buy, sizeof(quantity_buy)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, price_buy, sizeof(price_buy)), "ERRO A ESCREVER\n");
+
+                    printf("%s,%s,%s\n", stock_buy, quantity_buy, price_buy);
+
+                    //buy_auctions(stock, User, stock_buy, quantity_buy, price_buy);
+                    if (buy_auctions(stock, User, stock_buy, quantity_buy, price_buy)) {
+                        CHECK(write(client_fd, "Acao comprada\n", sizeof("Acao comprada\n")), "ERRO A ESCREVER\n");
+                    } else {
+                        CHECK(write(client_fd, "Acao nao comprada\n", sizeof("Acao nao comprada\n")), "ERRO A ESCREVER\n");
+                    }
+                    sleep(1);
+
                     break;
                 case 3:
                     printf("3\n");

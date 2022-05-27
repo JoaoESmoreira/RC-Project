@@ -33,7 +33,7 @@ int main() {
 
     #ifdef DEBUG
     for (int i = 0; i < number_user; ++i) {
-        printf("User: %s / Password: %s / Budget: %d\n",users[i].name, users[i].password, users[i].budget);
+        printf("User: %s / Password: %s / Budget: %f\n",users[i].name, users[i].password, users[i].budget);
     }
     #endif
 

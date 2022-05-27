@@ -12,7 +12,7 @@
 
 
 #define CHECK(X, ...) if (X == -1) { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
-
+#define MAXLEN 20
 
 
 bool input_option(int *op) {
@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
     printf("%s\n", buffer);
 
     int option = -1;
+    char buf[1024];
     while(option != 0){
         read(fd, buffer, 1024);
         printf("%s", buffer);
@@ -90,12 +91,28 @@ int main(int argc, char *argv[]) {
             //depois recebe os dados de ip e passa-o para uma thread que irá ler o multicast
         }*/
 
+        char stock_buy[MAXLEN], quantity_buy[MAXLEN], price_buy[MAXLEN];
+
         switch(option){
             case 1:
                 printf("1\n");
                 break;
             case 2:
                 printf("2\n");
+
+                printf("Introduza a acao a comprar: \n");
+                scanf("%s", stock_buy);
+                printf("Introduza a quantidade a comprar: \n");
+                scanf("%s", quantity_buy);
+                printf("Introduza o preço: \n");
+                scanf("%s", price_buy);
+
+                CHECK(write(fd, stock_buy, sizeof(stock_buy)), "ERRO A ESCREVER\n");
+                CHECK(write(fd, quantity_buy, sizeof(quantity_buy)), "ERRO A ESCREVER\n");
+                CHECK(write(fd, price_buy, sizeof(price_buy)), "ERRO A ESCREVER\n");
+                read(fd, buf, sizeof(buf));
+                printf("%s", buf);
+
                 break;
             case 3:
                 printf("3\n");

@@ -59,7 +59,7 @@ void read_user_file (FILE *file, USER *users, int max_users) {
         num_events = fscanf(file, "%50[^;]%c", users[i].password, &end_char);
         READING(num_events, end_char, sparator, "ERRO NO %dº USUARIO\n", i + 1);
 
-        num_events = fscanf(file, "%d%c", &users[i].budget, &end_char);
+        num_events = fscanf(file, "%f%c", &users[i].budget, &end_char);
         READING(num_events, end_line, sparator, "ERRO NO %dº USUARIO\n", i + 1);
 
         strcpy(users[i].markets[0], "-");
@@ -154,6 +154,8 @@ void read_stock_file (FILE *file, STOCK_LIST *stock) {
 
         num_events = fscanf(file, "%f%c", &stock[i].price, &end_char);
         READING(num_events, end_line, sparator, "ERRO A LER STOCK\n");
+
+        stock[i].volume = 100;
 
         stock->size++;
     }

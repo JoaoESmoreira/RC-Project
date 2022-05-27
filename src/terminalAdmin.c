@@ -170,7 +170,7 @@ static void list (USER *users, char *string) {
     strcat(string, "--------------------------------------LIST-------------------------------------\n");
 
     for (int i = 0; i < users->size; ++i) {
-        sprintf(aux, "| %s | %s | %s | %s | %d |\n" ,users[i].name ,users[i].password ,users[i].markets[0] ,users[i].markets[1] ,users[i].budget);
+        sprintf(aux, "| %s | %s | %s | %s | %f |\n" ,users[i].name ,users[i].password ,users[i].markets[0] ,users[i].markets[1] ,users[i].budget);
         strcat(string, aux);
         strcat(string, "-------------------------------------------------------------------------------\n");
     }
