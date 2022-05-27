@@ -122,6 +122,20 @@ static bool sell_auctions(STOCK_LIST *stock, USER *user, const char *name_stock,
     return true;
 }
 
+static bool verify_permission(USER *User,  STOCK_LIST *stock, int market){
+  if(market == 1){
+    if(strcmp(stock[0].market, User->markets[0]) == 0){
+      return true;
+    }
+  }
+  else if(market == 2){
+    if(strcmp(stock[3].market, User->markets[1]) == 0){
+      return true;
+    }
+  }
+  return false;
+}
+
 
 // all interaction between server ao client
 void* user(void *args) {
@@ -163,7 +177,30 @@ void* user(void *args) {
             //switch de opções
             switch(option){
                 case 1:
-                    printf("1\n");
+                    printf("VIM AO 1\n");
+                    int option2;
+                    sprintf(string, "Mercados:\n1)%s\n2)%s\n", stock[0].market, stock[3].market);
+                    CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, &option2, sizeof(option2)), "ERRO A LER\n");
+
+                    printf("RECEBIDO: %d\n", option2);
+                    //verify_permission(User,  stock, option2)
+                    if(true){
+                      CHECK(write(client_fd, "ACEITE", sizeof("ACEITE")), "ERRO A ESCREVER\n");
+                      sleep(1);
+                      printf("%d\n", option2);
+                      if(option2 == 1){
+                        CHECK(write(client_fd, "239.0.0.1", sizeof("239.0.0.1")), "ERRO A ESCREVER\n");
+                      }
+                      else{
+                        CHECK(write(client_fd, "239.0.0.2", sizeof("239.0.0.2")), "ERRO A ESCREVER\n");
+                      }
+                    }
+                    else{
+                      CHECK(write(client_fd, "Nao possui acesso a este mercado.\n", sizeof("Nao possui acesso a este mercado.\n")), "ERRO A ESCREVER\n");
+
+                    }
+                    sleep(1);
                     break;
                 case 2:
                     printf("2\n");

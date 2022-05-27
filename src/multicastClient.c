@@ -1,20 +1,12 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <strings.h>
+#include "client_header.h"
 
-#define PORT 6000
 
-void multiSub(char* group){
+void* multiSub(void* args){
+  char* group = (char*) args;
   struct sockaddr_in addr;
   int addrlen, s, cnt;
   struct ip_mreq mreq;
-  char message[50];
+  char message[1024];
 
   s = socket(AF_INET, SOCK_DGRAM, 0);
   if(s<0){
@@ -33,7 +25,7 @@ void multiSub(char* group){
     exit(1);
   }
 
-  int count = 0;
+
   mreq.imr_multiaddr.s_addr = inet_addr(group);
   mreq.imr_interface.s_addr = htonl(INADDR_ANY);
   if(setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) < 0){
@@ -41,15 +33,17 @@ void multiSub(char* group){
     exit(1);
   }
   while(1){
-    /*
-    if(count == 5){
-      printf("A sair\n");
+    //printf("ENTREI NO CICLO\n");
+    if(unsc){
+      printf("A sair do multicast\n");
       if(setsockopt(s, IPPROTO_IP, IP_DROP_MEMBERSHIP, &mreq, sizeof(mreq)) < 0){
         perror("setsockopt mreq");
         exit(1);
       }
+      close(s);
       return 0;
-    }*/
+    }
+    //printf("A ESPERA DO MULTICAST, %s PORT %d\n", group, PORT);
     cnt = recvfrom(s, message, sizeof(message), 0, (struct sockaddr *)&addr, (socklen_t *)&addrlen);
     if(cnt < 0){
       perror("recvfrom");
@@ -58,8 +52,11 @@ void multiSub(char* group){
     else if(cnt == 0){
       break;
     }
-    count++;
+    //printf("RECEBI DO multicast\n");
     //modificar para se adaptar ao que se quer do mercado
-    printf("%s: message = \"%s\"\n", inet_ntoa(addr.sin_addr), message);
+    if(impr){
+      printf("%s", message);
+    }
   }
+  pthread_exit(NULL);
 }

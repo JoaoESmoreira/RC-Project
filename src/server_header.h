@@ -98,6 +98,12 @@ typedef struct _USER_ARGS
     STOCK_LIST *stock; 
 } USER_ARGS;
 
+typedef struct _MULTICAST{
+  STOCK_LIST *stock;
+  char market[MAXLEN];
+  int aux;
+} MULTI;
+
 
 FILE *check_file(const char *);
 ADMIN read_admin_file(FILE *);
@@ -108,11 +114,13 @@ void read_stock_file(FILE *, STOCK_LIST *);
 void *admin_terminal(void *);
 void *market_manager(void *);
 void *user_interaction(void *);
+void* multiMerc(void* );
 
 int REFRESH_TIME;
 int terminal_fd;
 int total_users_loged;
 pthread_t admin_server, market_manager_server, user_interaction_server;
+pthread_t market1, market2;
 bool control;
 
 #endif

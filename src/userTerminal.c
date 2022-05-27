@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <arpa/inet.h>
-
-
-#define CHECK(X, ...) if (X == -1) { printf(__VA_ARGS__); exit(EXIT_FAILURE); }
-#define MAXLEN 20
-
+#include "client_header.h"
 
 bool input_option(int *op) {
     char aux;
@@ -34,6 +19,10 @@ int main(int argc, char *argv[]) {
     char endServer[100];
     struct sockaddr_in addr;
     struct hostent *hostPtr;
+    pthread_t market;
+
+    impr = true;
+    unsc = false;
 
     if (argc != 3) {
         printf("cliente <host> <port>\n");
@@ -96,6 +85,22 @@ int main(int argc, char *argv[]) {
         switch(option){
             case 1:
                 printf("1\n");
+                read(fd, buf, sizeof(buf));
+                printf("%s", buf);
+                scanf("%s", send);
+                printf("%s\n", send);
+                CHECK(write(fd, send, 1), "ERRO A ESCREVER\n");
+
+                read(fd, buf, sizeof(buf));
+                if(strcmp(buf, "ACEITE") == 0){
+                    //printf("ACEITE: %s\n", buf);
+                    read(fd, buf, sizeof(buf));
+                    //printf("IP: %s\n", buf);
+                    //inicia a thread multicast
+                    pthread_create(&market, NULL, multiSub, (void*) buf);
+                } else {
+                  printf("%s", buf);
+                }
                 break;
             case 2:
                 printf("2\n");
@@ -133,6 +138,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 4:
                 printf("4\n");
+                impr = !impr;
                 break;
             case 5:
                 printf("5\n");
@@ -145,7 +151,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    sleep(2);
     close(fd);
+    printf("LOGGED OUT\n");
     
     return 0;
 }
