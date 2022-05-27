@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri May 27 14:56:15 2022
+# Make data base, printed on Fri May 27 18:45:25 2022
 
 # Variables
 
@@ -191,7 +191,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-907c1cb7-1f4a-485a-b173-7c0085ad79e4.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-e2a30c28-d4b4-46df-8c06-7534357571b1.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -249,11 +249,11 @@ SNAP_NAME = code
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9fe5eea1_f65b_49c4_845f_4f33d20b0335
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/190f39a0_5621_42fd_895a_24869ce6f872
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.126
+GNOME_TERMINAL_SERVICE = :1.673
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 2)
@@ -278,7 +278,7 @@ LANG = C
 TERM = xterm-256color
  
 # environment
-VSCODE_PID = 5960
+VSCODE_PID = 22645
 # variable set hash-table stats:
 # Load=134/1024=13%, Rehash=0, Collisions=24/166=14%
 
@@ -419,7 +419,7 @@ terminalAdmin.o: terminalAdmin.c server_header.h
 # Not a target:
 server.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-27 01:13:56.841229216
+#  Last modified 2022-05-27 18:45:15.896986598
 #  File has been updated.
 #  Successfully updated.
 
@@ -474,6 +474,6 @@ terminalAdmin.c:
 # strcache performance: lookups = 79 / hit rate = 58%
 # hash-table stats:
 # Load=33/8192=0%, Rehash=0, Collisions=1/79=1%
-# Finished Make data base on Fri May 27 14:56:15 2022
+# Finished Make data base on Fri May 27 18:45:25 2022
 
  
