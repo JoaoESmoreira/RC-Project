@@ -116,6 +116,20 @@ int main(int argc, char *argv[]) {
                 break;
             case 3:
                 printf("3\n");
+
+                printf("Introduza a acao a vender: \n");
+                scanf("%s", stock_buy);
+                printf("Introduza a quantidade a vender: \n");
+                scanf("%s", quantity_buy);
+                printf("Introduza o preço: \n");
+                scanf("%s", price_buy);
+
+                CHECK(write(fd, stock_buy, sizeof(stock_buy)), "ERRO A ESCREVER\n");
+                CHECK(write(fd, quantity_buy, sizeof(quantity_buy)), "ERRO A ESCREVER\n");
+                CHECK(write(fd, price_buy, sizeof(price_buy)), "ERRO A ESCREVER\n");
+                read(fd, buf, sizeof(buf));
+                printf("%s", buf);
+
                 break;
             case 4:
                 printf("4\n");

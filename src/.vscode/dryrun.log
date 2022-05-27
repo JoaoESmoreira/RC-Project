@@ -1,5 +1,12 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'
-make: Nothing to be done for 'all'.
+gcc -g -Wall -Wextra -pthread -c server.c terminalAdmin.c read_file.c
+gcc -g -Wall -Wextra -pthread -c read_file.c server_header.h
+gcc -g -Wall -Wextra -pthread -c terminalAdmin.c server_header.h
+gcc -g -Wall -Wextra -pthread -c market_manager.c server_header.h
+gcc -g -Wall -Wextra -pthread -c serverUser.c server_header.h
+gcc -g -Wall -Wextra -pthread -c userTerminal.c
+gcc -g -Wall -Wextra -pthread server.o read_file.o terminalAdmin.o market_manager.o serverUser.o  -o prog
+gcc -g -Wall -Wextra userTerminal.o -o clientTerminal
 make: Leaving directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'
  

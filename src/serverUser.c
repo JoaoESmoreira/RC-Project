@@ -87,21 +87,37 @@ static bool buy_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, 
     int   quantity, pos;
     float price;
 
-    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 || stock[pos].price + 0.02 > price)
+    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 )
         return false;
 
     quantity = quantity - quantity % 10;
-    if (stock[pos].volume - quantity < 0 || user->budget - price < 0)
+    if (stock[pos].volume - quantity < 0 || user->budget - price < 0 || stock[pos].price + 0.02 > price)
         return false;
 
-    user->budget      -= price;
-    stock[pos].volume -= quantity;
-    for (int i = 0; i < MAXSTOCK; ++i) {
-        if (strcmp(user->stock[i].name, name_stock) == 0) {
-            user->stock[i].volume += quantity;
-            break;
-        }
-    }
+    user->budget            -= price;
+    stock[pos].volume       -= quantity;
+    user->stock[pos].volume += quantity;
+     
+    return true;
+}
+
+static bool sell_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, const char *quantity_buy, const char *price_buy) {
+    int   quantity, pos;
+    float price;
+
+    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 )
+        return false;
+
+    printf("HERE\n");
+
+    quantity = quantity - quantity % 10;
+    if (user->stock[pos].volume - quantity < 0 || stock[pos].price < price + 0.02)
+        return false;
+    printf("HERE\n");
+
+    user->budget            += price;
+    stock[pos].volume       += quantity;
+    user->stock[pos].volume -= quantity;
      
     return true;
 }
@@ -169,6 +185,20 @@ void* user(void *args) {
                     break;
                 case 3:
                     printf("3\n");
+                    
+                    CHECK(read(client_fd, stock_buy, sizeof(stock_buy)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, quantity_buy, sizeof(quantity_buy)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, price_buy, sizeof(price_buy)), "ERRO A ESCREVER\n");
+
+                    printf("%s,%s,%s\n", stock_buy, quantity_buy, price_buy);
+                    
+                    if (sell_auctions(stock, User, stock_buy, quantity_buy, price_buy)) {
+                        CHECK(write(client_fd, "Acao vendida\n", sizeof("Acao vendida\n")), "ERRO A ESCREVER\n");
+                    } else {
+                        CHECK(write(client_fd, "Acao nao vendida\n", sizeof("Acao nao vendida\n")), "ERRO A ESCREVER\n");
+                    }
+                    sleep(1);
+
                     break;
                 case 4:
                     printf("4\n");
