@@ -147,6 +147,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 0:
                 printf("LOGGED OUT\n");
+                unsc = true;
                 break;
         }
     }
