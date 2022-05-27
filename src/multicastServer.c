@@ -46,6 +46,8 @@ void* multiMerc(void* args){
   //printf("VIM PARA MANDAR\n");
   while(1){
     //printf("VOU MADAR PARA %s PORTO %d\n", group, PORTM);
+    if (!control)
+      break;
 
     for(int i=0; i< mult.stock->size; ++i){
       if(strcmp(mult.stock[i].market, market) == 0){
@@ -59,5 +61,7 @@ void* multiMerc(void* args){
     }
     sleep(REFRESH_TIME);
   }
+
+  printf("MulticastServer off\n");
   pthread_exit(NULL);
 }

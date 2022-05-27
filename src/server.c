@@ -1,20 +1,13 @@
 #include "server_header.h"
 
 
-FILE *file;
-
-void clean_resources() {
-    #ifdef DEBUG
-        printf("\n\nA limpar os recursos...\n");
-    #endif
-    fclose(file);
-}
 
 
 int main() {	
     srand(time(NULL));
     REFRESH_TIME = 2;
     control = true;
+    FILE *file;
     file  = check_file("configFile.txt");
     ADMIN admin = read_admin_file(file);
 
@@ -104,12 +97,19 @@ int main() {
     CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, (void *) &argument_cli), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&market1, NULL, multiMerc, (void *) &multi1), "Erro a criar thread\n");
     CHECK_PTHR(pthread_create(&market2, NULL, multiMerc, (void *) &multi2), "Erro a criar thread\n");
-    CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
-    CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
+
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
+    CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
+
+    if (fork() == 0) {
+        execlp("nc", "nc", "localhost", "8000", NULL);
+        exit(EXIT_SUCCESS);
+    }
+
+    CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market1, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market2, NULL), "Erro a esperar pela thread\n");
 
-    clean_resources();
+    fclose(file);
     return 0;
 }
