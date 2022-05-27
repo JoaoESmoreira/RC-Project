@@ -87,41 +87,39 @@ static bool buy_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, 
     int   quantity, pos;
     float price;
 
-    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 )
+    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 || stock[pos].price + 0.02 > price)
         return false;
 
     quantity = quantity - quantity % 10;
-    if (stock[pos].volume - quantity < 0 || user->budget - price < 0 || stock[pos].price + 0.02 > price)
+    if (stock[pos].volume - quantity < 0 || user->budget - price < 0)
         return false;
 
-    user->budget            -= price;
-    stock[pos].volume       -= quantity;
-    user->stock[pos].volume += quantity;
-     
+    user->budget      -= price;
+    stock[pos].volume -= quantity;
+    for (int i = 0; i < MAXSTOCK; ++i) {
+        if (strcmp(user->stock[i].name, name_stock) == 0) {
+            user->stock[i].volume += quantity;
+            break;
+        }
+    }
+
     return true;
 }
 
-static bool sell_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, const char *quantity_buy, const char *price_buy) {
-    int   quantity, pos;
-    float price;
 
-    if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 )
-        return false;
-
-    printf("HERE\n");
-
-    quantity = quantity - quantity % 10;
-    if (user->stock[pos].volume - quantity < 0 || stock[pos].price < price + 0.02)
-        return false;
-    printf("HERE\n");
-
-    user->budget            += price;
-    stock[pos].volume       += quantity;
-    user->stock[pos].volume -= quantity;
-     
-    return true;
+static bool verify_permission(USER *User,  STOCK_LIST *stock, int market){
+  if(market == 1){
+    if(strcmp(stock[0].market, User->markets[0]) == 0){
+      return true;
+    }
+  }
+  else if(market == 2){
+    if(strcmp(stock[3].market, User->markets[1]) == 0){
+      return true;
+    }
+  }
+  return false;
 }
-
 
 // all interaction between server ao client
 void* user(void *args) {
@@ -157,13 +155,37 @@ void* user(void *args) {
             CHECK(read(client_fd, &option, sizeof(option)), "ERRO A LER\n");
 
             bzero(string, sizeof(string));
-            
+
             char stock_buy[MAXLEN], quantity_buy[MAXLEN], price_buy[MAXLEN];
 
             //switch de opções
             switch(option){
                 case 1:
-                    printf("1\n");
+                    printf("VIM AO 1\n");
+                    int option2;
+                    sprintf(string, "Mercados:\n1)%s\n2)%s\n", stock[0].market, stock[3].market);
+                    CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
+                    CHECK(read(client_fd, &option2, sizeof(option2)), "ERRO A LER\n");
+
+                    printf("RECEBIDO: %d\n", option2);
+                    //verify_permission(User,  stock, option2)
+                    if(true){
+                      CHECK(write(client_fd, "ACEITE", sizeof("ACEITE")), "ERRO A ESCREVER\n");
+                      sleep(1);
+                      printf("%d\n", option2);
+                      if(option2 == 1){
+                        CHECK(write(client_fd, "239.0.0.1", sizeof("239.0.0.1")), "ERRO A ESCREVER\n");
+                      }
+                      else{
+                        CHECK(write(client_fd, "239.0.0.2", sizeof("239.0.0.2")), "ERRO A ESCREVER\n");
+                      }
+                    }
+                    else{
+                      CHECK(write(client_fd, "Nao possui acesso a este mercado.\n", sizeof("Nao possui acesso a este mercado.\n")), "ERRO A ESCREVER\n");
+
+                    }
+                    sleep(1);
+                    //CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
                     break;
                 case 2:
                     printf("2\n");
@@ -185,20 +207,6 @@ void* user(void *args) {
                     break;
                 case 3:
                     printf("3\n");
-                    
-                    CHECK(read(client_fd, stock_buy, sizeof(stock_buy)), "ERRO A ESCREVER\n");
-                    CHECK(read(client_fd, quantity_buy, sizeof(quantity_buy)), "ERRO A ESCREVER\n");
-                    CHECK(read(client_fd, price_buy, sizeof(price_buy)), "ERRO A ESCREVER\n");
-
-                    printf("%s,%s,%s\n", stock_buy, quantity_buy, price_buy);
-                    
-                    if (sell_auctions(stock, User, stock_buy, quantity_buy, price_buy)) {
-                        CHECK(write(client_fd, "Acao vendida\n", sizeof("Acao vendida\n")), "ERRO A ESCREVER\n");
-                    } else {
-                        CHECK(write(client_fd, "Acao nao vendida\n", sizeof("Acao nao vendida\n")), "ERRO A ESCREVER\n");
-                    }
-                    sleep(1);
-
                     break;
                 case 4:
                     printf("4\n");
@@ -238,7 +246,7 @@ void* user_interaction(void *args) {
     pthread_t id[MAXUSERS];
 
     CHECK((sock_fd = socket(AF_INET, SOCK_STREAM, 0)), "ERRO A CRIAR SOCKET TCP\n");
-    
+
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(PORT_BOLSA);
@@ -246,7 +254,7 @@ void* user_interaction(void *args) {
     CHECK(bind(sock_fd, (SOCKADDR *) &server_addr, sizeof(server_addr)), "ERRO NO BIND\n");
     CHECK(listen(sock_fd, 5), "ERRO NO LISTEN\n");
 
-    
+
     while (control) {
         if (total_users < MAXUSERS) {
             CHECK((client_fd[total_users++] = accept(sock_fd, (SOCKADDR *) &client_addr, (socklen_t *) &len_addr)), "ERRO NO ACCEPT\n");

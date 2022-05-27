@@ -11,7 +11,7 @@ void clean_resources() {
 }
 
 
-int main() {	
+int main() {
     srand(time(NULL));
     REFRESH_TIME = 2;
     control = true;
@@ -87,14 +87,28 @@ int main() {
     argument_cli.users = users;
     argument_cli.stock = stock;
 
+    MULTI multi1;
+    multi1.stock = stock;
+    strcpy(multi1.market, stock[0].market);
+    multi1.aux = 1;
+
+    MULTI multi2;
+    multi2.stock = stock;
+    strcpy(multi2.market, stock[3].market);
+    multi2.aux = 2;
+
     total_users_loged = 0;
 
     CHECK_PTHR(pthread_create(&admin_server, NULL, admin_terminal, (void *) &argumento_adn), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&market_manager_server, NULL, market_manager, (void *) &stock[0]), "Erro a crear thread\n");
     CHECK_PTHR(pthread_create(&user_interaction_server, NULL, user_interaction, (void *) &argument_cli), "Erro a crear thread\n");
+    CHECK_PTHR(pthread_create(&market1, NULL, multiMerc, (void *) &multi1), "Erro a criar thread\n");
+    CHECK_PTHR(pthread_create(&market2, NULL, multiMerc, (void *) &multi2), "Erro a criar thread\n");
     CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
+    CHECK_PTHR(pthread_join(market1, NULL), "Erro a esperar pela thread\n");
+    CHECK_PTHR(pthread_join(market2, NULL), "Erro a esperar pela thread\n");
 
     clean_resources();
     return 0;
