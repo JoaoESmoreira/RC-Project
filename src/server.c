@@ -6,13 +6,44 @@
 
 */
 
+// check if a string is digit
+bool is_number(char *number) {
+    for (int i = 0; number[i] != '\0'; ++i) {
+        if (!(number[i]>= '0' && number[i] <= '9'))
+            return false;
+    }
+    return true;
+}
 
-int main() {	
+bool validate_args(int argc, char *argv[]) {
+
+    if (argc != 4) {
+        printf("stock_server {PORTO_BOLSA} {PORTO_CONFIG} {ficheiro configuração}\n");
+        return false;
+    }
+    if (!is_number(argv[1]) || !is_number(argv[2])) {
+        printf("stock_server {PORTO_BOLSA} {PORTO_CONFIG} {ficheiro configuração}\n");
+        return false;
+    }
+
+    PORT_BOLSA = atoi(argv[1]);
+    PORT       = atoi(argv[2]);
+
+    return true;
+}
+
+
+int main(int argc, char *argv[]) {
+
+    if (!validate_args(argc, argv)) {
+        exit(EXIT_FAILURE);
+    }
+
     srand(time(NULL));
     REFRESH_TIME = 2;
     control = true;
     FILE *file;
-    file  = check_file("configFile.txt");
+    file  = check_file(argv[3]);
     ADMIN admin = read_admin_file(file);
 
     #ifdef DEBUG

@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat May 28 01:28:51 2022
+# Make data base, printed on Sat May 28 16:47:15 2022
 
 # Variables
 
@@ -49,7 +49,7 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:63742
+JOURNAL_STREAM = 8:60324
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,7 +77,7 @@ LC_CTYPE = pt_PT.UTF-8
 # makefile (from 'Makefile', line 3)
 OBJS = server.o read_file.o terminalAdmin.o market_manager.o serverUser.o multicastServer.o
 # environment
-MANAGERPID = 2101
+MANAGERPID = 2095
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -93,7 +93,7 @@ PATH = /home/joao_moreira/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/jmoreira:@/tmp/.ICE-unix/2361,unix/jmoreira:/tmp/.ICE-unix/2361
+SESSION_MANAGER = local/jmoreira:@/tmp/.ICE-unix/2351,unix/jmoreira:/tmp/.ICE-unix/2351
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -111,7 +111,7 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 417b4f042a44461584896cc26ac27067
+INVOCATION_ID = 1ffa011ea3dc44ac89257d62d1fb97be
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -135,7 +135,7 @@ PWD = /home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 2323
+SSH_AGENT_PID = 2313
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -191,7 +191,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-b9c4cddb-ce7e-41f1-b0db-31ca6e4bc44b.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-b4a34261-9bb0-41ac-b738-98e37db9e32e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -249,11 +249,11 @@ SNAP_NAME = code
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/e6e53e7b_05a8_4157_b56c_c9fdf2407649
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9c4d3c76_5bca_4ed1_888a_ae963b14f8ef
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.2262
+GNOME_TERMINAL_SERVICE = :1.365
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 2)
@@ -277,9 +277,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 60316
+VSCODE_PID = 10202
 # variable set hash-table stats:
-# Load=134/1024=13%, Rehash=0, Collisions=24/161=15%
+# Load=134/1024=13%, Rehash=0, Collisions=24/166=14%
 
 # Pattern-specific Variable Values
 
@@ -287,39 +287,37 @@ VSCODE_PID = 60316
 
 # Directories
 
-# . (device 66309, inode 6046172): 27 files, no impossibilities.
+# . (device 66309, inode 6046172): 15 files, no impossibilities.
 
-# 27 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 %.o: %.c
 #  recipe to execute (from 'Makefile', line 24):
 		$(CC) $(FLAGS) -pthread -c $^
+ 
 
 # 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
 
 # Not a target:
- 
 multicastClient.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 19:45:41.728734531
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 server_header.h:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 19:34:40.71973316
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 read_file.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-27 01:12:47.005854914
+#  Last modified 2022-05-28 15:10:45.693241698
 #  File has been updated.
 #  Successfully updated.
 
@@ -329,7 +327,9 @@ all: prog
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 
 .PHONY: all clean
 #  Implicit rule search has not been done.
@@ -338,10 +338,9 @@ all: prog
 
 # Not a target:
 market_manager.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 01:36:50.131812856
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 zip:
 #  Implicit rule search has not been done.
@@ -352,10 +351,9 @@ zip:
 
 # Not a target:
 multicastServer.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 22:50:40.41716255
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 Makefile:
@@ -367,9 +365,27 @@ Makefile:
 server.o: server.c server.c terminalAdmin.c read_file.c
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'server'
-#  Last modified 2022-05-28 01:25:20.587498142
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := server.o
+# automatic
+# % := 
+# automatic
+# * := server
+# automatic
+# + := server.c server.c terminalAdmin.c read_file.c
+# automatic
+# | := 
+# automatic
+# < := server.c
+# automatic
+# ^ := server.c terminalAdmin.c read_file.c
+# automatic
+# ? := server.c terminalAdmin.c read_file.c
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/14=7%
 #  recipe to execute (from 'Makefile', line 24):
 		$(CC) $(FLAGS) -pthread -c $^
 
@@ -382,39 +398,29 @@ debug: server.o read_file.o terminalAdmin.o market_manager.o serverUser.o multic
 
 prog: server.o read_file.o terminalAdmin.o market_manager.o serverUser.o multicastServer.o userTerminal.o multicastClient.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-05-28 01:25:21.055496073
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 #  recipe to execute (from 'Makefile', line 11):
 		$(CC) $(FLAGS) $(OBJS) -o prog
 		$(CC) $(FLAGS) userTerminal.o multicastClient.o -o clientTerminal
 
-serverUser.o: serverUser.c serverUser.c server_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'serverUser'
-#  Last modified 2022-05-28 01:25:20.799497205
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+serverUser.o: serverUser.c server_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-userTerminal.o: userTerminal.c userTerminal.c
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'userTerminal'
-#  Last modified 2022-05-28 01:25:20.96349648
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+userTerminal.o: userTerminal.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-terminalAdmin.o: terminalAdmin.c terminalAdmin.c server_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'terminalAdmin'
-#  Last modified 2022-05-28 01:25:20.639497912
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+terminalAdmin.o: terminalAdmin.c server_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -425,18 +431,14 @@ terminalAdmin.o: terminalAdmin.c terminalAdmin.c server_header.h
 # Not a target:
 server.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-28 00:53:14.498860753
+#  Last modified 2022-05-28 16:31:11.26487555
 #  File has been updated.
 #  Successfully updated.
 
-multicastClient.o: multicastClient.c multicastClient.c client_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'multicastClient'
-#  Last modified 2022-05-28 01:25:20.995496338
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+multicastClient.o: multicastClient.c client_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 clean:
 #  Phony target (prerequisite of .PHONY).
@@ -446,75 +448,60 @@ clean:
 #  recipe to execute (from 'Makefile', line 18):
 		rm $(OBJS) prog server_header.h.gch client_header.h.gch clientTerminal multicastClient.o userTerminal.o
 
-read_file.o: read_file.c read_file.c server_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'read_file'
-#  Last modified 2022-05-28 01:25:20.679497735
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+read_file.o: read_file.c server_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-market_manager.o: market_manager.c market_manager.c server_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'market_manager'
-#  Last modified 2022-05-28 01:25:20.711497594
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+market_manager.o: market_manager.c server_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 client_header.h:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 19:18:25.36713507
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 serverUser.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-28 01:25:04.151571388
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
-multicastServer.o: multicastServer.c multicastServer.c server_header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'multicastServer'
-#  Last modified 2022-05-28 01:25:20.871496886
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'Makefile', line 24):
-		$(CC) $(FLAGS) -pthread -c $^
+multicastServer.o: multicastServer.c server_header.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 userTerminal.c:
-#  Implicit rule search has been done.
-#  Last modified 2022-05-27 22:18:58.150894914
-#  File has been updated.
-#  Successfully updated.
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 terminalAdmin.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-27 23:21:07.691907131
+#  Last modified 2022-05-28 15:00:32.423009852
 #  File has been updated.
 #  Successfully updated.
 
 # files hash-table stats:
-# Load=27/1024=3%, Rehash=0, Collisions=0/97=0%
+# Load=27/1024=3%, Rehash=0, Collisions=0/83=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 46 / storage = 553 B / avg = 12 B
-# current buf: size = 8162 B / used = 553 B / count = 46 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 36 / storage = 403 B / avg = 11 B
+# current buf: size = 8162 B / used = 403 B / count = 36 / avg = 11 B
 
-# strcache performance: lookups = 123 / hit rate = 62%
+# strcache performance: lookups = 90 / hit rate = 60%
 # hash-table stats:
-# Load=46/8192=1%, Rehash=0, Collisions=1/123=1%
-# Finished Make data base on Sat May 28 01:28:51 2022
+# Load=36/8192=0%, Rehash=0, Collisions=1/90=1%
+# Finished Make data base on Sat May 28 16:47:15 2022
 
  

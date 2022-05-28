@@ -36,8 +36,8 @@
         exit(EXIT_FAILURE);  \
     }
 
-#define PORT_BOLSA 8000
-#define PORT       9876
+//#define PORT_BOLSA 8000
+//#define PORT       9876
 #define BUFLEN     1024
 #define SOCKADDRIN struct sockaddr_in
 #define SOCKADDR   struct sockaddr
@@ -115,6 +115,10 @@ void *admin_terminal(void *);
 void *market_manager(void *);
 void *user_interaction(void *);
 void* multiMerc(void* );
+
+
+int PORT_BOLSA;
+int PORT;
 
 int REFRESH_TIME;
 int terminal_fd;
