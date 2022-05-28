@@ -253,6 +253,7 @@ void* user(void *args) {
                     CHECK(write(client_fd, "Opcao introduzida inválida.", sizeof("Opcao introduzida inválida.")),"ERRO A ESCREVER\n");*/
             }
         }
+        total_users_loged--;
     } else {
 
         CHECK(write(client_fd, "Maximo de utilizadores atingido\n", strlen("Maximo de utilizadores atingido\n")), "ERRO A ESCREVER\n");
@@ -273,6 +274,7 @@ void* user_interaction(void *args) {
     SOCKADDRIN server_addr, client_addr;
     int sock_fd, client_fd[MAXUSERS], len_addr = sizeof(client_addr), total_users = 0;
     pthread_t id[MAXUSERS];
+    total_users_loged = 0;
 
     CHECK((sock_fd = socket(AF_INET, SOCK_STREAM, 0)), "ERRO A CRIAR SOCKET TCP\n");
     

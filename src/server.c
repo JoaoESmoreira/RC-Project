@@ -100,16 +100,21 @@ int main() {
 
     CHECK_PTHR(pthread_join(admin_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market_manager_server, NULL), "Erro a esperar pela thread\n");
-
-    if (fork() == 0) {
-        execlp("nc", "nc", "localhost", "8000", NULL);
-        exit(EXIT_SUCCESS);
-    }
-
-    CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market1, NULL), "Erro a esperar pela thread\n");
     CHECK_PTHR(pthread_join(market2, NULL), "Erro a esperar pela thread\n");
 
+    /*if (fork() == 0) {
+        execlp("./clientTerminal", "./clientTerminal", "localhost", "8000", NULL);
+        exit(EXIT_SUCCESS);
+    }*/
+
+    //pthread_kill(user_interaction_server, SIGKILL);
+    pthread_cancel(user_interaction_server);
+
+    CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
+
     fclose(file);
+
+    printf("SHUTDOWN\n");
     return 0;
 }

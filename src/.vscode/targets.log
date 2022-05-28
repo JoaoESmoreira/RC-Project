@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri May 27 20:10:17 2022
+# Make data base, printed on Sat May 28 00:29:05 2022
 
 # Variables
 
@@ -191,7 +191,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d0756e30-cfcd-481d-9b1a-f34e2704e76c.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f926fb5b-b156-481b-9504-583235fa8449.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -249,11 +249,11 @@ SNAP_NAME = code
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/4a05fafe_6524_4728_b0f2_2196b4cb2231
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/18a97f63_a130_46bd_a20f_2061bba7f2f5
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.1513
+GNOME_TERMINAL_SERVICE = :1.2038
 # default
 SUFFIXES := 
 # makefile (from 'Makefile', line 2)
@@ -277,7 +277,8 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 34445
+ 
+VSCODE_PID = 52090
 # variable set hash-table stats:
 # Load=134/1024=13%, Rehash=0, Collisions=24/166=14%
 
@@ -287,10 +288,9 @@ VSCODE_PID = 34445
 
 # Directories
 
- 
-# . (device 66309, inode 6046172): 15 files, no impossibilities.
+# . (device 66309, inode 6046172): 17 files, no impossibilities.
 
-# 15 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -431,7 +431,7 @@ terminalAdmin.o: terminalAdmin.c server_header.h
 # Not a target:
 server.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-27 19:27:03.723021726
+#  Last modified 2022-05-28 00:28:35.8591176
 #  File has been updated.
 #  Successfully updated.
 
@@ -484,7 +484,7 @@ userTerminal.c:
 # Not a target:
 terminalAdmin.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-27 01:11:59.914290089
+#  Last modified 2022-05-27 23:21:07.691907131
 #  File has been updated.
 #  Successfully updated.
 
@@ -499,9 +499,9 @@ terminalAdmin.c:
 # strcache buffers: 1 (0) / strings = 36 / storage = 403 B / avg = 11 B
 # current buf: size = 8162 B / used = 403 B / count = 36 / avg = 11 B
 
-# strcache performance: lookups = 90 / hit rate = 60%
+# strcache performance: lookups = 92 / hit rate = 60%
 # hash-table stats:
-# Load=36/8192=0%, Rehash=0, Collisions=1/90=1%
-# Finished Make data base on Fri May 27 20:10:17 2022
+# Load=36/8192=0%, Rehash=0, Collisions=1/92=1%
+# Finished Make data base on Sat May 28 00:29:05 2022
 
  
