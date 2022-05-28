@@ -149,7 +149,7 @@ void* user(void *args) {
     USER *users       = arg->users;
     STOCK_LIST *stock = arg->stock;
 
-    if (total_users_loged < 6) {
+    if (total_users_loged < 2) {
         total_users_loged = total_users_loged + 1;
         char username[MAXLEN], password[MAXLEN];
         int option = -1;
@@ -277,8 +277,8 @@ void* user_interaction(void *args) {
 
 
     SOCKADDRIN server_addr, client_addr;
-    int sock_fd, client_fd[MAXUSERS], len_addr = sizeof(client_addr), total_users = 0;
-    pthread_t id[MAXUSERS];
+    int len_addr = sizeof(client_addr);
+    total_users = 0;
     total_users_loged = 0;
 
     CHECK((sock_fd = socket(AF_INET, SOCK_STREAM, 0)), "ERRO A CRIAR SOCKET TCP\n");
@@ -286,6 +286,12 @@ void* user_interaction(void *args) {
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(PORT_BOLSA);
+
+    int yes = 1;
+    if ( setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ){
+        perror("setsockopt");
+            exit(1);
+        }
 
     CHECK(bind(sock_fd, (SOCKADDR *) &server_addr, sizeof(server_addr)), "ERRO NO BIND\n");
     CHECK(listen(sock_fd, 5), "ERRO NO LISTEN\n");

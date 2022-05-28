@@ -113,11 +113,18 @@ int main() {
     }*/
 
     //pthread_kill(user_interaction_server, SIGKILL);
+    for (int i = 0; i < total_users; ++i)
+        pthread_cancel(id[i]);
     pthread_cancel(user_interaction_server);
 
     CHECK_PTHR(pthread_join(user_interaction_server, NULL), "Erro a esperar pela thread\n");
 
     fclose(file);
+
+    for (int i = 0; i < total_users; ++i) {
+        close(client_fd[i]);
+    }
+    close(sock_fd);
 
     printf("SHUTDOWN\n");
     return 0;
