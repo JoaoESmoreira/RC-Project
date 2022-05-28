@@ -188,8 +188,8 @@ void* user(void *args) {
                     CHECK(write(client_fd, string, sizeof(string)), "ERRO A ESCREVER\n");
                     CHECK(read(client_fd, &option2, sizeof(option2)), "ERRO A LER\n");
 
-                    printf("RECEBIDO: %d\n", option2);
-                    if(verify_permission(User, stock, option2)){
+                    printf("RECEBIDO: %d\n", option2 - '0');
+                    if(verify_permission(User, stock, option2 - '0')){
                       CHECK(write(client_fd, "ACEITE", sizeof("ACEITE")), "ERRO A ESCREVER\n");
                       sleep(1);
                       printf("%d\n", option2);
