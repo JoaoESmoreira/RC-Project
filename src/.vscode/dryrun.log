@@ -1,5 +1,13 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'
+gcc -g -Wall -Wextra -pthread -pthread -c server.c terminalAdmin.c read_file.c
+gcc -g -Wall -Wextra -pthread -pthread -c read_file.c server_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c terminalAdmin.c server_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c market_manager.c server_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c serverUser.c server_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c multicastServer.c server_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c userTerminal.c client_header.h
+gcc -g -Wall -Wextra -pthread -pthread -c multicastClient.c client_header.h
 gcc -g -Wall -Wextra -pthread server.o read_file.o terminalAdmin.o market_manager.o serverUser.o multicastServer.o -o stock_server
 gcc -g -Wall -Wextra -pthread userTerminal.o multicastClient.o -o operations_terminal
 make: Leaving directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project/src'

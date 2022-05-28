@@ -149,7 +149,7 @@ void* user(void *args) {
     USER *users       = arg->users;
     STOCK_LIST *stock = arg->stock;
 
-    if (total_users_loged < 2) {
+    if (total_users_loged < 6) {
         total_users_loged = total_users_loged + 1;
         char username[MAXLEN], password[MAXLEN];
         int option = -1;
