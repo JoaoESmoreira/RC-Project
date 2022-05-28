@@ -1,5 +1,12 @@
 #include "server_header.h"
 
+
+/*
+
+    thread responsavel por atualizar os dados das bolsas (preco do stock)
+
+*/
+
 void* market_manager(void *args) {
     STOCK_LIST *stock = (STOCK_LIST *) args;
     int num;

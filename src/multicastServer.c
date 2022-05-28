@@ -1,6 +1,14 @@
 
 #include "server_header.h"
 
+/*
+
+    thread responsavel por enviar as informaçoes das bolsas por multicast
+
+*/
+
+
+
 // 239.0.0.1 - market 1
 // 239.0.0.2 - market 2
 // Ao iniciar o servidor chamar a função para o mercado 1 e para o mercado 2

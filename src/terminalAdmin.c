@@ -1,5 +1,13 @@
 #include "server_header.h"
 
+/*
+
+    thread responsavel por receber todas as ordens do admin
+
+*/
+
+
+
 // return the number of space of a command
 static int number_spaces(const char *string) {
     int count = 0;

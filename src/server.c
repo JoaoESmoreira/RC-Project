@@ -1,6 +1,10 @@
 #include "server_header.h"
 
+/*
 
+    programa main responsavel por iniciar todo o sistema do servidor
+
+*/
 
 
 int main() {	

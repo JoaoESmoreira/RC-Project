@@ -1,5 +1,14 @@
 #include "client_header.h"
 
+/*
+
+    terminal cliente, estao todas as opçoes que o user pode executar
+    permite a ligaçao entre user e server
+
+*/
+
+
+// faz o input de um numero e vadida o numero
 bool input_option(int *op) {
     char aux;
     
@@ -146,7 +155,6 @@ int main(int argc, char *argv[]) {
                 printf("%s", buffer);
                 break;
             case 0:
-                printf("LOGGED OUT\n");
                 unsc = true;
                 break;
         }

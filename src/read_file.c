@@ -1,5 +1,12 @@
 #include "server_header.h"
 
+
+/*
+
+    script responsavel por ler o configFile
+
+*/
+
 // check if the file has the correct name and open it
 // if everything it's ok return a file pointer
 FILE* check_file(const char *file_name) {

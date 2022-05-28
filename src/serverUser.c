@@ -1,7 +1,10 @@
 #include "server_header.h"
 
-//pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+/*
 
+    neste ficheiro estao todas as interaçoes que o servidor recebe do user
+
+*/
 
 USER* getUser(USER *users, const char *username) {
     for (int i = 0; i < users->size; ++i) {
@@ -12,6 +15,7 @@ USER* getUser(USER *users, const char *username) {
     return NULL;
 }
 
+// put in a string all info about the own auctions
 void list_stock_wallet(USER *User, char *dest) {
     char string[BUFLEN];
     string[0] = '\0';
@@ -33,6 +37,7 @@ void list_stock_wallet(USER *User, char *dest) {
     }
 }
 
+// put in a string infos about the market that user has permissions (stock name: current price)
 static void list_stock_avaible(STOCK_LIST *stock, USER *User, char *dest) {
     bool flag = false;
     char string[1024];
@@ -40,7 +45,6 @@ static void list_stock_avaible(STOCK_LIST *stock, USER *User, char *dest) {
     sprintf(string, "Stocks inscritos: ");
 
     for (int j = 0; j < stock->size; ++j) {
-        //printf("%d - %d", strcmp(User->markets[0], stock[j].name) == 0, strcmp(User->markets[1], stock[j].name) == 0);
         if (strcmp(User->markets[0], stock[j].market) == 0 || strcmp(User->markets[1], stock[j].market) == 0) {
             strcat(string, stock[j].name);
             sprintf(aux, " Preço: %f | ", stock[j].price);
@@ -70,6 +74,7 @@ static bool check_credentials(USER *users, char *username, char * password) {
     return false;
 }
 
+// chech if exists the stock
 static int check_stock(STOCK_LIST *stock, const USER *user, const char *name_stock) {
 
     for (int i = 0; i < MAXSTOCK; ++i) {
@@ -94,6 +99,7 @@ static bool buy_auctions(STOCK_LIST *stock, USER *user, const char *name_stock, 
     if (stock[pos].volume - quantity < 0 || user->budget - price < 0 || stock[pos].price + 0.02 > price)
         return false;
 
+    price                   *= quantity;
     user->budget            -= price;
     stock[pos].volume       -= quantity;
     user->stock[pos].volume += quantity;
@@ -108,13 +114,12 @@ static bool sell_auctions(STOCK_LIST *stock, USER *user, const char *name_stock,
     if ((pos = check_stock(stock, user, name_stock)) == -1 || (price = strtof(price_buy, NULL)) == 0 || (quantity = atoi(quantity_buy)) == 0 )
         return false;
 
-    printf("HERE\n");
 
     quantity = quantity - quantity % 10;
     if (user->stock[pos].volume - quantity < 0 || stock[pos].price < price + 0.02)
         return false;
-    printf("HERE\n");
 
+    price    = price * quantity;
     user->budget            += price;
     stock[pos].volume       += quantity;
     user->stock[pos].volume -= quantity;

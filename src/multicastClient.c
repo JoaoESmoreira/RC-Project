@@ -1,6 +1,13 @@
 #include "client_header.h"
 
 
+/*
+
+    thread responsavel por receber as informaçoes das bolsas por multicast
+
+*/
+
+
 void* multiSub(void* args){
   char* group = (char*) args;
   struct sockaddr_in addr;
