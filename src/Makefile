@@ -30,6 +30,6 @@ read_file.o:		read_file.c server_header.h
 terminalAdmin.o:	terminalAdmin.c server_header.h
 market_manager.o:	market_manager.c server_header.h
 serverUser.o:		serverUser.c server_header.h
-userTerminal.o:		userTerminal.c
+userTerminal.o:		userTerminal.c client_header.h
 multicastClient.o:	multicastClient.c client_header.h
 multicastServer.o:	multicastServer.c server_header.h
