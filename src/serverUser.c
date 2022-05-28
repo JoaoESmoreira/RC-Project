@@ -143,9 +143,9 @@ void* user(void *args) {
     int client_fd     = arg->client_fd;
     USER *users       = arg->users;
     STOCK_LIST *stock = arg->stock;
-    total_users_loged = total_users_loged + 1;
 
     if (total_users_loged < 6) {
+        total_users_loged = total_users_loged + 1;
         char username[MAXLEN], password[MAXLEN];
         int option = -1;
 
