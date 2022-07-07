@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project'
+make: Leaving directory '/home/joao_moreira/Desktop/MyProjects/RC/RC-Project'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
