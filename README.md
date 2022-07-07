@@ -1,11 +1,14 @@
-## RC-Project
+# RC-Project
 
-Project for the Networking and Communication subject.
+
+The main objective of the project is build a socket transaction system for the Networking and Communication subject.
+
 
 ## Pre Requirements
 
 With the purpose to run this project it is required to have some tools. It is needed a C compiler as `gcc` (or others) and a OS as `gnu/linux`.
 In the case we are using a Lubuntu distribution.
+We are assume netcat is installed by default in the OS. Otherwise, you will have to install it.
 
 
 ## Obtain the main code
@@ -29,16 +32,22 @@ make
 make debug
 ```
 
+After that, two scripts will be created: `stock_server` and `operations_terminal`.
 
-## Run
+
+# Run
 
 To run the server you just need to run:
 ```bash
-./prog 
+./stock_server {STOCK PORT} {CONFIG PORT} {config file}
 ```
 In other terminal, make use of `netcat` to simulate the admin usage.
 ```bash
 nc -u localhost 9876
+```
+Finally, for user usage:
+```bash
+./operations_terminal {IP ADDRESS of server} {STOCK PORT}
 ```
 
 ## Runing server
@@ -47,7 +56,9 @@ First of all, the admin must login with their credentials. To do this, just pres
 
 After you run the server and netcat, it is time for the admin to send some instructions to the server.
 
-### Options
+# Admin interaction
+
+### Operations
 #### Add a new user
 ```bash
 ADD_USER {username} {password} {the sockets we have access} {budget}
@@ -58,7 +69,7 @@ ADD_USER {username} {password} {the sockets we have access} {budget}
 LIST
 ```
 
-##### Delete a user
+#### Delete a user
 ```bash
 DEL {username}
 ```
@@ -73,11 +84,24 @@ REFRESH {new time}
 QUIT
 ```
 
-#### To torn of the server
+#### To turn off the server
 ```bash
 QUIT_SERVER
 ```
 
+# User interaction
+
+When you log in as a user, the server will ask to put your credentials. Only it's possible if previouslythe admin added you.
+
+The operations are selected by a number. The server will send you all information about what you need to do.
+
+You can:
+#### Subcrive a market to get all informations by multicast
+#### Buy auctions
+#### Sell auctions
+#### Turn on/off the feed of market
+#### Check your wallet
+#### Log out
 
 ## Collaborators
 
